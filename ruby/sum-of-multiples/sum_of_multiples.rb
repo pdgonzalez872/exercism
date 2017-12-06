@@ -10,42 +10,17 @@ class SumOfMultiples
     end
   end
 
-  attr_reader :a, :b, :c
+  attr_reader :factors
 
   def initialize(*args)
-    case args.size
-    when 0
-      return
-    when 1
-      @a = args[0]
-    when 2
-      @a, @b = args
-    when 3
-      @a, @b, @c = args
-    end
+    @factors = args
   end
 
   def to(ceiling)
-    return 0 if @a.nil?
-    return 0 if ceiling < a
-
-    result = []
-
-    if a
-      multiples_a = self.class.calculate_sum_of_multiples(ceiling, a)
-      result = multiples_a
-    end
-
-    if a && b
-      multiples_b = self.class.calculate_sum_of_multiples(ceiling, b)
-      result = multiples_a + multiples_b
-    end
-
-    if a && b && c
-      multiples_c = self.class.calculate_sum_of_multiples(ceiling, c)
-      result = multiples_a + multiples_b + multiples_c
-    end
-    result.uniq.inject(0) {|acc, i| acc+= i}
+    return 0 if factors.empty?
+    factors.map do |f|
+      self.class.calculate_sum_of_multiples(ceiling, f)
+    end.flatten.uniq.inject(0) {|acc, i| acc+= i}
   end
 end
 
