@@ -26,17 +26,21 @@ defmodule RotationalCipher do
     cond do
       String.contains?("1234567890", element) ->
         {:integer, element, nil}
+
       String.contains?(" ", element) ->
         {:space, nil, nil}
+
+      String.contains?("'/,!?.", element) ->
+        {:integer, element, nil}
+
       true ->
         {:string, element, shift}
     end
   end
 
-  def process_letter({:symbol, symbol, _}), do: symbol
-  def process_letter({:space, _, _}), do: " "
-  def process_letter({:letter, letter, shift}), do: " "
   def process_letter({:integer, number, _}), do: number
+  def process_letter({:space, _, _}), do: " "
+  def process_letter({:symbol, symbol, _}), do: symbol
 
   def process_letter({:string, letter, shift}) do
     %{letter: _, list: list} = create_data_for_letter(letter)
@@ -53,22 +57,22 @@ defmodule RotationalCipher do
 
     list =
       cond do
-        letter == "a" ->
-          translate_utf_list(?a..?z)
+        # letter == "a" ->
+        #   translate_utf_list(?a..?z)
 
-        letter == "z" ->
-          translate_utf_list(?z..?a)
+        # letter == "z" ->
+        #   translate_utf_list(?z..?a)
 
-        letter == "A" ->
-          translate_utf_list(?A..?Z)
+        # letter == "A" ->
+        #   translate_utf_list(?A..?Z)
 
-        letter == "Z" ->
-          translate_utf_list(?Z..?A)
+        # letter == "Z" ->
+        #   translate_utf_list(?Z..?A)
 
-        Enum.member?(lowercase_minus_a, letter) ->
+        Enum.member?(lowercase, letter) ->
           create_alphabet_list(lowercase, letter)
 
-        Enum.member?(uppercase_minus_A, letter) ->
+        Enum.member?(uppercase, letter) ->
           create_alphabet_list(uppercase, letter)
 
         true ->

@@ -44,7 +44,6 @@ defmodule RotationalCipherTest do
     assert RotationalCipher.rotate(plaintext, shift) == "TRL"
   end
 
-  @tag :pending
   test "rotate spaces" do
     plaintext = "O M G"
     shift = 5
@@ -57,14 +56,12 @@ defmodule RotationalCipherTest do
     assert RotationalCipher.rotate(plaintext, shift) == "Xiwxmrk 1 2 3 xiwxmrk"
   end
 
-  @tag :pending
   test "rotate punctuation" do
     plaintext = "Let's eat, Grandma!"
     shift = 21
     assert RotationalCipher.rotate(plaintext, shift) == "Gzo'n zvo, Bmviyhv!"
   end
 
-  @tag :pending
   test "rotate all letters" do
     plaintext = "The quick brown fox jumps over the lazy dog."
     shift = 13
