@@ -2,7 +2,6 @@ defmodule RotationalCipher do
   @doc """
   Given a plaintext and amount to shift by, return a rotated string.
 
-
   Example:
   iex> RotationalCipher.rotate("Attack at dawn", 13)
   "Nggnpx ng qnja"
@@ -12,17 +11,17 @@ defmodule RotationalCipher do
 
   @spec rotate(text :: String.t(), shift :: integer) :: String.t()
   def rotate(text, shift) do
-    # result =
-    #   text <> <<0>>
-    #   |> :binary.bin_to_list()
-    #   |> Enum.map(fn(el) -> el + shift end)
-    #   |> Enum.drop(-1)
-    #   |> Enum.to_list()
-    #   |> List.to_string()
 
-    # for each letter
+    split_text =
+      text
+      |> String.split("")
+      |> Enum.filter(fn(el)-> el != "" end)
+      |> Enum.map(fn(el)-> process_letter(el, shift) end)
+      |> Enum.join("")
+  end
 
-    %{letter: _, list: list} = create_data_for_letter(text)
+  def process_letter(letter, shift) do
+    %{letter: _, list: list} = create_data_for_letter(letter)
 
     real_shift = shift_value(shift)
 
