@@ -36,14 +36,14 @@ defmodule PauloRotaTest do
     test "returns a data structure with the correct data mappings - b" do
       result = PauloRota.create_data_for_letter("b")
 
-      list = []
+      list = ["b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "a"]
       assert result == %{letter: "b", list: list}
     end
 
     test "returns a data structure with the correct data mappings - B" do
       result = PauloRota.create_data_for_letter("B")
 
-      list = []
+      list = ["B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "A"]
       assert result == %{letter: "B", list: list}
     end
   end

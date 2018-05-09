@@ -7,6 +7,8 @@ defmodule PauloRota do
 
     # Nice list comprehension pattern, source:
     # http://elixir-recipes.github.io/strings/list-with-alphabet/
+    lowercase = for n <- ?a..?z, do: << n :: utf8 >>
+    uppercase = for n <- ?A..?Z, do: << n :: utf8 >>
     lowercase_minus_a = for n <- ?b..?z, do: << n :: utf8 >>
     uppercase_minus_A = for n <- ?B..?Z, do: << n :: utf8 >>
 
@@ -27,26 +29,29 @@ defmodule PauloRota do
           translate_utf_list(?Z..?A)
 
         Enum.member?(lowercase_minus_a, letter) ->
-          binaries_list = :binary.bin_to_list(letter <> <<0>>)
-          start_range = Enum.at(binaries_list, 0)
-          end_range = start_range - 1
+          create_alphabet_list(lowercase, letter)
 
-          #require IEx; IEx.pry
+        Enum.member?(uppercase_minus_A, letter) ->
+          create_alphabet_list(uppercase, letter)
 
-          start_range..end_range
-          |> Enum.to_list()
-          |> List.to_string()
-
-        letter == "B" ->
-          raise "upper"
+        # letter == "B" ->
+        #   raise "upper"
 
         true ->
-          raise "nothing."
+          raise "Should not have gotten here..."
       end
     Map.put(result, :list, list)
   end
 
   def translate_utf_list(range) do
     Enum.map(range, fn(el) -> << el :: utf8 >> end)
+  end
+
+  def create_alphabet_list(original_list, letter) do
+    start_index = Enum.find_index(original_list, fn el -> el == letter end)
+    tail = Enum.slice(original_list, start_index, length(original_list))
+    head = Enum.slice(original_list, 0, start_index)
+
+    tail ++ head
   end
 end
