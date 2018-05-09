@@ -2,76 +2,86 @@ defmodule RotationalCipher do
   @doc """
   Given a plaintext and amount to shift by, return a rotated string.
 
-  @max_range(26)
 
   Example:
   iex> RotationalCipher.rotate("Attack at dawn", 13)
   "Nggnpx ng qnja"
   """
+
+  @max_range(26)
+
   @spec rotate(text :: String.t(), shift :: integer) :: String.t()
   def rotate(text, shift) do
+    # result =
+    #   text <> <<0>>
+    #   |> :binary.bin_to_list()
+    #   |> Enum.map(fn(el) -> el + shift end)
+    #   |> Enum.drop(-1)
+    #   |> Enum.to_list()
+    #   |> List.to_string()
 
-    # uppercase -> Rotate between uppercases only, 65..90
-    # lowercase -> Rotate between lowercases only, 97..122
-    # comma     -> Symbol stays the same
+    # for each letter
 
-    ranges = %{lowercase: 97..122, uppercase: 65..90}
+    %{letter: _, list: list} = create_data_for_letter(text)
 
-    # case shift > 26
-    # case shift == 26 -> no shift, call this function with 0
-    # case shift < 26 -> add
+    real_shift = shift_value(shift)
 
-    result =
-      text <> <<0>>
-      |> :binary.bin_to_list()
-      |> IO.inspect()
-      |> Enum.map(fn(el) -> el + shift end)
-      |> Enum.drop(-1)
-      |> Enum.to_list()
-      |> List.to_string()
+    Enum.at(list, real_shift)
   end
 
-  def process_single_char(char, shift) do
+  def create_data_for_letter(letter) do
+    # Nice list comprehension pattern, source:
+    # http://elixir-recipes.github.io/strings/list-with-alphabet/
+    lowercase = for n <- ?a..?z, do: << n :: utf8 >>
+    uppercase = for n <- ?A..?Z, do: << n :: utf8 >>
+    lowercase_minus_a = for n <- ?b..?z, do: << n :: utf8 >>
+    uppercase_minus_A = for n <- ?B..?Z, do: << n :: utf8 >>
 
-    case char do
-      ?a..?z ->
+    result = %{letter: letter}
 
-      ?A..?Z ->
+    list =
+      cond do
+        letter == "a" ->
+          translate_utf_list(?a..?z)
 
-      _ ->
-        # symbols
-    end
-  end
+        letter == "z" ->
+          translate_utf_list(?z..?a)
 
-  def create_lookup() do
-    65..122
-    |> Enum.reduce(%{}, fn(el, acc) ->
-      if Map.has_key?(acc, el) do
-        nil
-      else
-        Map.put(acc, el, <<el>>)
+        letter == "A" ->
+          translate_utf_list(?A..?Z)
+
+        letter == "Z" ->
+          translate_utf_list(?Z..?A)
+
+        Enum.member?(lowercase_minus_a, letter) ->
+          create_alphabet_list(lowercase, letter)
+
+        Enum.member?(uppercase_minus_A, letter) ->
+          create_alphabet_list(uppercase, letter)
+
+        true ->
+          raise "Should not have gotten here..."
       end
-    end)
+    Map.put(result, :list, list)
   end
 
-  def calculate_wrap_around(range, shift) do
-
+  def translate_utf_list(range) do
+    Enum.map(range, fn(el) -> << el :: utf8 >> end)
   end
 
-  # when it goes over -> divide by 26, then use remainder to lookup
+  defp create_alphabet_list(original_list, letter) do
+    start_index = Enum.find_index(original_list, fn el -> el == letter end)
+    tail = Enum.slice(original_list, start_index, length(original_list))
+    head = Enum.slice(original_list, 0, start_index)
 
-  def create_lookup_for_all_letters(shift) do
-    lookup = %{}
+    tail ++ head
+  end
 
-    lowercase =
-      ?a..?z
-      |> Enum.map(fn(n)->
-        n
-      end)
-      |> Enum.with_index(0)
-
-
-    lookup
-    |> Map.put(:lowercase, lowercase)
+  defp shift_value(shift) do
+    if div(shift, @max_range) > 0 do
+      shift - @max_range
+    else
+      shift
+    end
   end
 end
