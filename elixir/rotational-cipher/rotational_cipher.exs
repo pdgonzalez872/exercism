@@ -6,9 +6,6 @@ defmodule RotationalCipher do
   iex> RotationalCipher.rotate("Attack at dawn", 13)
   "Nggnpx ng qnja"
   """
-
-  @max_range(26)
-
   @spec rotate(text :: String.t(), shift :: integer) :: String.t()
   def rotate(text, shift) do
     text
@@ -48,44 +45,21 @@ defmodule RotationalCipher do
   end
 
   def create_data_for_letter(letter) do
-    lowercase         = translate_utf_list(?a..?z)
-    uppercase         = translate_utf_list(?A..?Z)
-    lowercase_minus_a = translate_utf_list(?b..?z)
-    uppercase_minus_A = translate_utf_list(?B..?Z)
+    lowercase = Enum.map(?a..?z, fn(el) -> << el :: utf8 >> end)
+    uppercase = Enum.map(?A..?Z, fn(el) -> << el :: utf8 >> end)
 
     result = %{letter: letter}
 
     list =
-      cond do
-        # letter == "a" ->
-        #   translate_utf_list(?a..?z)
-
-        # letter == "z" ->
-        #   translate_utf_list(?z..?a)
-
-        # letter == "A" ->
-        #   translate_utf_list(?A..?Z)
-
-        # letter == "Z" ->
-        #   translate_utf_list(?Z..?A)
-
-        Enum.member?(lowercase, letter) ->
-          create_alphabet_list(lowercase, letter)
-
-        Enum.member?(uppercase, letter) ->
-          create_alphabet_list(uppercase, letter)
-
-        true ->
-        raise "This is not good. |#{letter}| -> broke it"
+      if Enum.member?(lowercase, letter) do
+        create_alphabet_list(lowercase, letter)
+      else
+        create_alphabet_list(uppercase, letter)
       end
     Map.put(result, :list, list)
   end
 
-  def translate_utf_list(range) do
-    Enum.map(range, fn(el) -> << el :: utf8 >> end)
-  end
-
-  defp create_alphabet_list(original_list, letter) when is_binary(letter) do
+  defp create_alphabet_list(original_list, letter) do
     start_index = Enum.find_index(original_list, fn el -> el == letter end)
     tail = Enum.slice(original_list, start_index, length(original_list))
     head = Enum.slice(original_list, 0, start_index)
@@ -94,8 +68,10 @@ defmodule RotationalCipher do
   end
 
   defp shift_value(shift) do
-    if div(shift, @max_range) > 0 do
-      shift - @max_range
+    max_alphabet_range = 26
+
+    if div(shift, max_alphabet_range) > 0 do
+      shift - max_alphabet_range
     else
       shift
     end
