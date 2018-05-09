@@ -14,26 +14,40 @@ defmodule RotationalCipher do
     text
     |> String.split("")
     |> Enum.filter(fn(el)-> el != "" end)
-    |> Enum.map(fn(el)-> process_letter(el, shift) end)
+    |> Enum.map(fn(el)->
+      el
+      |> handle_type(shift)
+      |> process_letter()
+    end)
     |> Enum.join("")
   end
 
+  def handle_type(element, shift) do
+    cond do
+      String.contains?("1234567890", element) ->
+        {:integer, element, nil}
+      String.contains?(" ", element) ->
+        {:space, nil, nil}
+      true ->
+        {:string, element, shift}
+    end
+  end
 
-  def process_letter(" ", _), do: " "
+  def process_letter({:symbol, symbol, _}), do: symbol
+  def process_letter({:space, _, _}), do: " "
+  def process_letter({:letter, letter, shift}), do: " "
+  def process_letter({:integer, number, _}), do: number
 
-  def process_letter(letter, shift) when is_binary(letter) do
+  def process_letter({:string, letter, shift}) do
     %{letter: _, list: list} = create_data_for_letter(letter)
     Enum.at(list, shift_value(shift))
   end
 
   def create_data_for_letter(letter) do
-    # Nice list comprehension pattern, source:
-    # http://elixir-recipes.github.io/strings/list-with-alphabet/
-    # TODO: Refactor, use translate_utf_list instead
-    lowercase = for n <- ?a..?z, do: << n :: utf8 >>
-    uppercase = for n <- ?A..?Z, do: << n :: utf8 >>
-    lowercase_minus_a = for n <- ?b..?z, do: << n :: utf8 >>
-    uppercase_minus_A = for n <- ?B..?Z, do: << n :: utf8 >>
+    lowercase         = translate_utf_list(?a..?z)
+    uppercase         = translate_utf_list(?A..?Z)
+    lowercase_minus_a = translate_utf_list(?b..?z)
+    uppercase_minus_A = translate_utf_list(?B..?Z)
 
     result = %{letter: letter}
 
@@ -58,18 +72,13 @@ defmodule RotationalCipher do
           create_alphabet_list(uppercase, letter)
 
         true ->
-          {number, ""} = Integer.parse(letter)
-          create_alphabet_list(:rest, letter)
+        raise "This is not good. |#{letter}| -> broke it"
       end
     Map.put(result, :list, list)
   end
 
   def translate_utf_list(range) do
     Enum.map(range, fn(el) -> << el :: utf8 >> end)
-  end
-
-  defp create_alphabet_list(:rest, letter) do
-    letter
   end
 
   defp create_alphabet_list(original_list, letter) when is_binary(letter) do
