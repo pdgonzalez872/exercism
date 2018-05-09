@@ -8,7 +8,6 @@ ExUnit.configure(exclude: :pending, trace: true)
 defmodule RotationalCipherTest do
   use ExUnit.Case
 
-  # @tag :pending
   test "rotate a by 1" do
     plaintext = "a"
     shift = 1
