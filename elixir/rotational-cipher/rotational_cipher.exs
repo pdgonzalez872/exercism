@@ -11,26 +11,25 @@ defmodule RotationalCipher do
 
   @spec rotate(text :: String.t(), shift :: integer) :: String.t()
   def rotate(text, shift) do
-
-    split_text =
-      text
-      |> String.split("")
-      |> Enum.filter(fn(el)-> el != "" end)
-      |> Enum.map(fn(el)-> process_letter(el, shift) end)
-      |> Enum.join("")
+    text
+    |> String.split("")
+    |> Enum.filter(fn(el)-> el != "" end)
+    |> Enum.map(fn(el)-> process_letter(el, shift) end)
+    |> Enum.join("")
   end
 
-  def process_letter(letter, shift) do
+
+  def process_letter(" ", _), do: " "
+
+  def process_letter(letter, shift) when is_binary(letter) do
     %{letter: _, list: list} = create_data_for_letter(letter)
-
-    real_shift = shift_value(shift)
-
-    Enum.at(list, real_shift)
+    Enum.at(list, shift_value(shift))
   end
 
   def create_data_for_letter(letter) do
     # Nice list comprehension pattern, source:
     # http://elixir-recipes.github.io/strings/list-with-alphabet/
+    # TODO: Refactor, use translate_utf_list instead
     lowercase = for n <- ?a..?z, do: << n :: utf8 >>
     uppercase = for n <- ?A..?Z, do: << n :: utf8 >>
     lowercase_minus_a = for n <- ?b..?z, do: << n :: utf8 >>
@@ -59,7 +58,8 @@ defmodule RotationalCipher do
           create_alphabet_list(uppercase, letter)
 
         true ->
-          raise "Should not have gotten here..."
+          {number, ""} = Integer.parse(letter)
+          create_alphabet_list(:rest, letter)
       end
     Map.put(result, :list, list)
   end
@@ -68,7 +68,11 @@ defmodule RotationalCipher do
     Enum.map(range, fn(el) -> << el :: utf8 >> end)
   end
 
-  defp create_alphabet_list(original_list, letter) do
+  defp create_alphabet_list(:rest, letter) do
+    letter
+  end
+
+  defp create_alphabet_list(original_list, letter) when is_binary(letter) do
     start_index = Enum.find_index(original_list, fn el -> el == letter end)
     tail = Enum.slice(original_list, start_index, length(original_list))
     head = Enum.slice(original_list, 0, start_index)
