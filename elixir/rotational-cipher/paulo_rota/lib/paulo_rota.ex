@@ -1,4 +1,8 @@
-defmodule PauloRota do
+defmodule RotationalCipher do
+  @moduledoc """
+  No doc.
+  """
+
   @doc """
   Given a plaintext and amount to shift by, return a rotated string.
 
