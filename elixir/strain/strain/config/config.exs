@@ -10,11 +10,11 @@ use Mix.Config
 
 # You can configure your application as:
 #
-#     config :paulo_strain, key: :value
+#     config :strain, key: :value
 #
 # and access this configuration in your application as:
 #
-#     Application.get_env(:paulo_strain, :key)
+#     Application.get_env(:strain, :key)
 #
 # You can also configure a 3rd-party app:
 #
