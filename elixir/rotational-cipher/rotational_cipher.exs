@@ -1,4 +1,8 @@
 defmodule RotationalCipher do
+  @moduledoc """
+  No doc.
+  """
+
   @doc """
   Given a plaintext and amount to shift by, return a rotated string.
 
@@ -10,8 +14,8 @@ defmodule RotationalCipher do
   def rotate(text, shift) do
     text
     |> String.split("")
-    |> Enum.filter(fn(el)-> el != "" end)
-    |> Enum.map(fn(el)->
+    |> Enum.filter(fn el -> el != "" end)
+    |> Enum.map(fn el ->
       el
       |> handle_type(shift)
       |> process_letter()
@@ -45,8 +49,8 @@ defmodule RotationalCipher do
   end
 
   def create_data_for_letter(letter) do
-    lowercase = Enum.map(?a..?z, fn(el) -> << el :: utf8 >> end)
-    uppercase = Enum.map(?A..?Z, fn(el) -> << el :: utf8 >> end)
+    lowercase = Enum.map(?a..?z, fn el -> <<el::utf8>> end)
+    uppercase = Enum.map(?A..?Z, fn el -> <<el::utf8>> end)
 
     result = %{letter: letter}
 
@@ -56,6 +60,7 @@ defmodule RotationalCipher do
       else
         create_alphabet_list(uppercase, letter)
       end
+
     Map.put(result, :list, list)
   end
 
