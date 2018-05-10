@@ -22,10 +22,6 @@ defmodule ProteinTranslation do
     |> prepare_response_rna
   end
 
-  def prepare_output(nested_list) do
-    nested_list
-  end
-
   def prepare_response_rna(result) do
     invalid = "invalid codon"
 
