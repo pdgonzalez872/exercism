@@ -28,7 +28,12 @@ defmodule ProteinTranslation do
   end
 
   def prepare_response_rna(result) do
-    {:ok, result}
+    invalid = "invalid RNA"
+    if Enum.member?(result, invalid) do
+      {:error, invalid}
+    else
+      {:ok, result}
+    end
   end
 
   def stop_translation_if_stop_condon_is_present(list) do
@@ -49,6 +54,10 @@ defmodule ProteinTranslation do
     lookup_table()
     |> Enum.find(fn({k, _v}) -> k == codon end)
     |> prepare_response_codon()
+  end
+
+  def prepare_response_codon(nil) do
+    {:error, "invalid RNA"}
   end
 
   def prepare_response_codon({_codon, name}) do
