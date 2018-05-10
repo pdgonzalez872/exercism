@@ -1,6 +1,5 @@
 defmodule ProteinTranslation do
-
-  @rna_size(3)
+  @rna_size 3
 
   @doc """
   Given an RNA string, return a list of proteins specified by codons, in order.
@@ -17,7 +16,7 @@ defmodule ProteinTranslation do
       |> of_codon()
       |> prepare_response_codon()
     end)
-    |> Enum.map(fn({_status, name})-> name end)
+    |> Enum.map(fn {_status, name} -> name end)
     |> stop_translation_if_stop_condon_is_present()
     |> Enum.uniq()
     |> prepare_response_rna
@@ -28,16 +27,17 @@ defmodule ProteinTranslation do
   end
 
   def prepare_response_rna(result) do
-    invalid = "invalid RNA"
+    invalid = "invalid codon"
+
     if Enum.member?(result, invalid) do
-      {:error, invalid}
+      {:error, "invalid RNA"}
     else
       {:ok, result}
     end
   end
 
   def stop_translation_if_stop_condon_is_present(list) do
-    first_stop = Enum.find_index(list, fn(el)-> el == "STOP"end)
+    first_stop = Enum.find_index(list, fn el -> el == "STOP" end)
 
     if is_nil(first_stop) do
       list
@@ -52,12 +52,12 @@ defmodule ProteinTranslation do
   @spec of_codon(String.t()) :: {atom, String.t()}
   def of_codon(codon) do
     lookup_table()
-    |> Enum.find(fn({k, _v}) -> k == codon end)
+    |> Enum.find(fn {k, _v} -> k == codon end)
     |> prepare_response_codon()
   end
 
   def prepare_response_codon(nil) do
-    {:error, "invalid RNA"}
+    {:error, "invalid codon"}
   end
 
   def prepare_response_codon({_codon, name}) do
