@@ -9,10 +9,12 @@ defmodule StrainTest do
     assert Strain.keep([], &noop/1) == []
   end
 
+  @tag :this
   test "keep everything" do
     assert Strain.keep([1, 2, 3], fn e -> e < 10 end) == [1, 2, 3]
   end
 
+  @tag :this
   test "keep first and last" do
     assert Strain.keep([1, 2, 3], &is_odd?/1) == [1, 3]
   end
