@@ -96,46 +96,45 @@ defmodule PigLatinTest do
       assert PigLatin.translate("square") == "aresquay"
     end
 
-    @tag :pending
     test "word beginning with th" do
       assert PigLatin.translate("therapy") == "erapythay"
     end
 
-    @tag :pending
     test "word beginning with thr" do
       assert PigLatin.translate("thrush") == "ushthray"
     end
 
-    @tag :pending
     test "word beginning with sch" do
       assert PigLatin.translate("school") == "oolschay"
     end
   end
 
   describe "'x' and 'y', when followed by a consonant, are treated like a vowel" do
-    @tag :pending
+
+    test "rule is good" do
+      assert PigLatin.x_and_y_rule("y", "t") == true
+      assert PigLatin.x_and_y_rule("y", "e") == false
+
+    end
+
     test "word beginning with y, followed by a consonant" do
       assert PigLatin.translate("yttria") == "yttriaay"
     end
 
-    @tag :pending
     test "word beginning with y, followed by another consonant" do
       assert PigLatin.translate("yddria") == "yddriaay"
     end
 
-    @tag :pending
     test "word beginning with xr" do
       assert PigLatin.translate("xray") == "xrayay"
     end
 
-    @tag :pending
     test "word beginning with xb" do
       assert PigLatin.translate("xbot") == "xbotay"
     end
   end
 
   describe "phrases are translated" do
-    @tag :pending
     test "a whole phrase" do
       assert PigLatin.translate("quick fast run") == "ickquay astfay unray"
     end
