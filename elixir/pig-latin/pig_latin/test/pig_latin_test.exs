@@ -110,11 +110,9 @@ defmodule PigLatinTest do
   end
 
   describe "'x' and 'y', when followed by a consonant, are treated like a vowel" do
-
     test "rule is good" do
       assert PigLatin.x_and_y_rule("y", "t") == true
       assert PigLatin.x_and_y_rule("y", "e") == false
-
     end
 
     test "word beginning with y, followed by a consonant" do

@@ -1,21 +1,19 @@
 defmodule PigLatin do
+  @ending ["ay"]
 
-  @ending(["ay"])
-
-  @outliers_and_their_index(%{
-      qu: 2, # really is the length of the outlier
-      squ: 3,
-    })
+  @outliers_and_their_index %{
+    # really is the length of the outlier
+    qu: 2,
+    squ: 3
+  }
 
   def translate(word) do
     if String.contains?(word, " ") do
       word
       |> handle_sentence()
-
     else
       word
       |> handle_one_word()
-
     end
   end
 
@@ -29,7 +27,7 @@ defmodule PigLatin do
   def handle_sentence(sentence) do
     sentence
     |> String.split(" ")
-    |> Enum.map(fn(w) -> handle_one_word(w) end)
+    |> Enum.map(fn w -> handle_one_word(w) end)
     |> Enum.join(" ")
   end
 
@@ -41,7 +39,6 @@ defmodule PigLatin do
         :vowel
 
       !is_vowel(a) && is_vowel(b) ->
-
         case String.to_atom("#{a}#{b}") do
           :qu ->
             :qu
@@ -57,6 +54,7 @@ defmodule PigLatin do
         case String.to_atom("#{a}#{b}#{c}") do
           :squ ->
             :squ
+
           _ ->
             :two_or_more_consonants
         end
@@ -68,10 +66,9 @@ defmodule PigLatin do
 
     result = determine_case(split_word)
 
-    handle_call(result, split_word) ++ @ending
+    (handle_call(result, split_word) ++ @ending)
     |> Enum.join("")
   end
-
 
   def handle_call(:vowel, letter_list) do
     [head | tail] = letter_list
@@ -83,7 +80,7 @@ defmodule PigLatin do
   end
 
   def handle_call(:two_or_more_consonants, letter_list) do
-    first_vowel_index = Enum.find_index(letter_list, fn(w)-> is_vowel(w) end)
+    first_vowel_index = Enum.find_index(letter_list, fn w -> is_vowel(w) end)
     consonants = Enum.slice(letter_list, 0..(first_vowel_index - 1))
     rest = Enum.slice(letter_list, first_vowel_index..-1)
 
