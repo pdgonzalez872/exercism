@@ -31,6 +31,7 @@ defmodule PigLatin do
     |> Enum.join(" ")
   end
 
+  # Unsure of this cascading logic here.
   def determine_case(split_word) do
     [a, b, c | _] = split_word
 
@@ -39,8 +40,8 @@ defmodule PigLatin do
         :vowel
 
       !is_vowel(a) && is_vowel(b) ->
-        case String.to_atom("#{a}#{b}") do
-          :qu ->
+        case "#{a}#{b}" do
+          "qu" ->
             :qu
 
           _ ->
@@ -51,8 +52,8 @@ defmodule PigLatin do
         :vowel
 
       true ->
-        case String.to_atom("#{a}#{b}#{c}") do
-          :squ ->
+        case "#{a}#{b}#{c}" do
+          "squ" ->
             :squ
 
           _ ->
@@ -62,16 +63,16 @@ defmodule PigLatin do
   end
 
   def handle_ending(split_word) do
-    [head | tail] = split_word
-
-    result = determine_case(split_word)
+    result =
+      split_word
+      |> determine_case()
 
     (handle_call(result, split_word) ++ @ending)
     |> Enum.join("")
   end
 
   def handle_call(:vowel, letter_list) do
-    [head | tail] = letter_list
+    letter_list
   end
 
   def handle_call(:one_consonant, letter_list) do
@@ -81,10 +82,9 @@ defmodule PigLatin do
 
   def handle_call(:two_or_more_consonants, letter_list) do
     first_vowel_index = Enum.find_index(letter_list, fn w -> is_vowel(w) end)
-    consonants = Enum.slice(letter_list, 0..(first_vowel_index - 1))
-    rest = Enum.slice(letter_list, first_vowel_index..-1)
 
-    rest ++ consonants
+    letter_list
+    |> move_letters_based_on_index(first_vowel_index)
   end
 
   def handle_call(outlier_rule, letter_list) do
@@ -99,11 +99,6 @@ defmodule PigLatin do
     rest = Enum.slice(letter_list, index..-1)
 
     rest ++ consonants
-  end
-
-  def move_first_and_second_letters_to_end(letter_list) do
-    [first, second | tail] = letter_list
-    tail ++ [first, second]
   end
 
   def is_vowel(letter) do
