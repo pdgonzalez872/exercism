@@ -14,21 +14,18 @@ defmodule SpaceAgeTest do
     assert_in_delta 31.69, result, 0.005
   end
 
-  @tag :pending
   test "age on Mercury" do
     input = 2_134_835_688
     assert_in_delta 67.65, SpaceAge.age_on(:earth, input), 0.005
     assert_in_delta 280.88, SpaceAge.age_on(:mercury, input), 0.005
   end
 
-  @tag :pending
   test "age on Venus" do
     input = 189_839_836
     assert_in_delta 6.02, SpaceAge.age_on(:earth, input), 0.005
     assert_in_delta 9.78, SpaceAge.age_on(:venus, input), 0.005
   end
 
-  @tag :pending
   test "age on Mars" do
     input = 2_329_871_239
     assert_in_delta 73.83, SpaceAge.age_on(:earth, input), 0.005

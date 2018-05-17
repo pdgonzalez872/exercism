@@ -1,5 +1,7 @@
 defmodule SpaceAge do
 
+  defstruct(seconds_in_minute: 60, minutes_in_hour: 60, hours_in_days: 24, days_in_year: nil)
+
   @planet_data(
     [
       earth: %{
@@ -13,37 +15,47 @@ defmodule SpaceAge do
         seconds_in_minute: 60,
         minutes_in_hour: 60,
         hours_in_days: 24,
-        days_in_year: 365.25
+        days_in_year: 87.97
+      },
+
+      mars: %{
+        seconds_in_minute: 60,
+        minutes_in_hour: 60,
+        hours_in_days: 24,
+        days_in_year: 687.0
+      },
+
+      venus: %{
+        seconds_in_minute: 60,
+        minutes_in_hour: 60,
+        hours_in_days: 24,
+        days_in_year: 224.70
       }
     ]
   )
 
-  def age_on(planet = :earth, seconds) do
-
-    # seconds
-    # minutes
-    # hours
-    # days
-    # years
-
-    (seconds / 1)
+  def age_on(planet, seconds) do
+    seconds
+    #|> to_float()
     |> to_minutes()
     |> to_hours()
     |> to_days(planet)
     |> to_years(planet)
   end
 
-  def divide_by_60(input), do: input / 60
+  def to_float(input), do: input / 1
 
+  def divide_by_60(input), do: input / 60
   def to_minutes(input), do: divide_by_60(input)
   def to_hours(input), do: divide_by_60(input)
 
-  def to_days(input, planet = :earth) do
+  def to_days(input, planet) do
     planet_data = @planet_data[planet]
     input / planet_data.hours_in_days
   end
 
-  def to_years(input, :earth) do
-    input / 365.25
+  def to_years(input, planet) do
+    planet_data = @planet_data[planet]
+    input / planet_data.days_in_year
   end
 end
