@@ -1,5 +1,5 @@
 defmodule SpaceAge do
-  # How many Earth scale days in a year.
+  # How many (Earth scale) days in a year.
   @planet_data [
     earth: %{
       days_in_year: 365.25
