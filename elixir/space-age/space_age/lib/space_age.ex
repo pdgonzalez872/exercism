@@ -1,34 +1,20 @@
 defmodule SpaceAge do
 
-  defstruct(seconds_in_minute: 60, minutes_in_hour: 60, hours_in_days: 24, days_in_year: nil)
-
   @planet_data(
     [
       earth: %{
-        seconds_in_minute: 60,
-        minutes_in_hour: 60,
-        hours_in_days: 24,
         days_in_year: 365.25
       },
 
       mercury: %{
-        seconds_in_minute: 60,
-        minutes_in_hour: 60,
-        hours_in_days: 24,
         days_in_year: 87.97
       },
 
       mars: %{
-        seconds_in_minute: 60,
-        minutes_in_hour: 60,
-        hours_in_days: 24,
         days_in_year: 687.0
       },
 
       venus: %{
-        seconds_in_minute: 60,
-        minutes_in_hour: 60,
-        hours_in_days: 24,
         days_in_year: 224.70
       }
     ]
@@ -49,9 +35,8 @@ defmodule SpaceAge do
   def to_minutes(input), do: divide_by_60(input)
   def to_hours(input), do: divide_by_60(input)
 
-  def to_days(input, planet) do
-    planet_data = @planet_data[planet]
-    input / planet_data.hours_in_days
+  def to_days(input, _planet) do
+    input / 24
   end
 
   def to_years(input, planet) do
