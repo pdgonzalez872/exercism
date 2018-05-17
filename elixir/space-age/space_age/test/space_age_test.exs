@@ -32,28 +32,24 @@ defmodule SpaceAgeTest do
     assert_in_delta 39.25, SpaceAge.age_on(:mars, input), 0.005
   end
 
-  @tag :pending
   test "age on Jupiter" do
     input = 901_876_382
     assert_in_delta 28.58, SpaceAge.age_on(:earth, input), 0.005
     assert_in_delta 2.41, SpaceAge.age_on(:jupiter, input), 0.005
   end
 
-  @tag :pending
   test "age on Saturn" do
     input = 3_000_000_000
     assert_in_delta 95.06, SpaceAge.age_on(:earth, input), 0.005
     assert_in_delta 3.23, SpaceAge.age_on(:saturn, input), 0.005
   end
 
-  @tag :pending
   test "age on Uranus" do
     input = 3_210_123_456
     assert_in_delta 101.72, SpaceAge.age_on(:earth, input), 0.005
     assert_in_delta 1.21, SpaceAge.age_on(:uranus, input), 0.005
   end
 
-  @tag :pending
   test "age on Neptune" do
     input = 8_210_123_456
     assert_in_delta 260.16, SpaceAge.age_on(:earth, input), 0.005

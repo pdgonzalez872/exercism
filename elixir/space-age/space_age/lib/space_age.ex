@@ -1,28 +1,34 @@
 defmodule SpaceAge do
-
-  @planet_data(
-    [
-      earth: %{
-        days_in_year: 365.25
-      },
-
-      mercury: %{
-        days_in_year: 87.97
-      },
-
-      mars: %{
-        days_in_year: 687.0
-      },
-
-      venus: %{
-        days_in_year: 224.70
-      }
-    ]
-  )
+  # How many Earth scale days in a year.
+  @planet_data [
+    earth: %{
+      days_in_year: 365.25
+    },
+    mercury: %{
+      days_in_year: 87.97
+    },
+    mars: %{
+      days_in_year: 687.0
+    },
+    venus: %{
+      days_in_year: 224.70
+    },
+    jupiter: %{
+      days_in_year: 4340
+    },
+    saturn: %{
+      days_in_year: 10_750
+    },
+    uranus: %{
+      days_in_year: 30_750
+    },
+    neptune: %{
+      days_in_year: 59_955
+    },
+  ]
 
   def age_on(planet, seconds) do
     seconds
-    #|> to_float()
     |> to_minutes()
     |> to_hours()
     |> to_days(planet)
