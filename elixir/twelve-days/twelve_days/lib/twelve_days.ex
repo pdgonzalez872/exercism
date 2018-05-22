@@ -17,34 +17,35 @@ defmodule TwelveDays do
 
   # When given a number other than 1, must return all of the verses until 1
   def verse(verse_number) do
-    raise "NOOO"
-    #build_verse(verse_number)
-  end
-
-  def build_intro(verse_data = %{}) do
-    intro = "On the #{verse_data.ordinal} day of Christmas my true love gave to me"
-    output = verse_data.output ++ [intro]
-    Map.put(verse_data, :output, output)
-  end
-
-  def build_ending(verse_data = %{}) do
-    ending = "#{verse_data.cardinal} #{verse_data.item}."
-    output = verse_data.output ++ [ending]
-    Map.put(verse_data, :output, output)
-  end
-
-  # no.
-  def build_verse(verse_number) do
-    verse_data =
+    state =
       verse_number
       |> get_verse_data()
-      |> Enum.at(0)
-    "On the #{verse_data.ordinal} day of Christmas my true love gave to me, #{verse_data.cardinal} #{verse_data.item}."
+      |> build_intro()
+      |> build_middle_verses()
+      |> build_ending()
+
+    Enum.join(state.output, ", ")
   end
 
-  # Add an and
-  def build_last_item() do
-    "and a Partridge in a Pear Tree"
+  def build_intro(state = %{}) do
+    intro = "On the #{state.ordinal} day of Christmas my true love gave to me"
+    output = state.output ++ [intro]
+    Map.put(state, :output, output)
+  end
+
+  def build_ending(state = %{}) do
+    ending = "#{state.cardinal} #{state.item}."
+    output = state.output ++ [ending]
+    Map.put(state, :output, output)
+  end
+
+  def build_middle_verses(state = %{}) do
+
+  end
+
+  def get_verse_data(n) do
+    state = Enum.filter(verse_list, fn(el)-> el.verse_number == n end) |> Enum.at(0)
+    Map.put(state, :output, [])
   end
 
   def verse_list() do
@@ -62,10 +63,5 @@ defmodule TwelveDays do
       %{verse_number: 11, cardinal: "eleven", ordinal: "elenventh", item: "Pipers Piping"},
       %{verse_number: 12, cardinal: "twelve", ordinal: "twelfth", item: "Drummers Drumming"},
     ]
-  end
-
-  def get_verse_data(n) do
-    verse_data = Enum.filter(verse_list, fn(el)-> el.verse_number == n end) |> Enum.at(0)
-    Map.put(verse_data, :output, [])
   end
 end
