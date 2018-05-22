@@ -1,9 +1,14 @@
 defmodule TwelveDays do
 
-  # Looks like verses are comprised of:
-  # - Intro
-  # - descending count verses
-  # - Ending
+  def sing() do
+    verses(1, 12)
+  end
+
+  def verses(start_range, end_range) do
+    Enum.map(end_range..start_range, fn(verse_number)-> verse(verse_number) end)
+    |> Enum.reverse()
+    |> Enum.join("\n")
+  end
 
   def verse(verse_number = 1) do
     state =
@@ -15,7 +20,6 @@ defmodule TwelveDays do
     Enum.join(state.output, ", ")
   end
 
-  # When given a number other than 1, must return all of the verses until 1
   def verse(verse_number) do
     state =
       verse_number
@@ -74,7 +78,7 @@ defmodule TwelveDays do
       %{verse_number: 8,  cardinal: "eight", ordinal: "eighth", item: "Maids-a-Milking"},
       %{verse_number: 9,  cardinal: "nine", ordinal: "ninth", item: "Ladies Dancing"},
       %{verse_number: 10, cardinal: "ten", ordinal: "tenth", item: "Lords-a-Leaping"},
-      %{verse_number: 11, cardinal: "eleven", ordinal: "elenventh", item: "Pipers Piping"},
+      %{verse_number: 11, cardinal: "eleven", ordinal: "eleventh", item: "Pipers Piping"},
       %{verse_number: 12, cardinal: "twelve", ordinal: "twelfth", item: "Drummers Drumming"},
     ]
   end
