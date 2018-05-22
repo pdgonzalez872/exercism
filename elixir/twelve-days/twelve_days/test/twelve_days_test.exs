@@ -6,7 +6,6 @@ defmodule TwelveDaysTest do
                "On the first day of Christmas my true love gave to me, a Partridge in a Pear Tree."
     end
 
-    @tag :pending
     test "sixth verse" do
       assert TwelveDays.verse(6) ==
                "On the sixth day of Christmas my true love gave to me, six Geese-a-Laying, five Gold Rings, four Calling Birds, three French Hens, two Turtle Doves, and a Partridge in a Pear Tree."

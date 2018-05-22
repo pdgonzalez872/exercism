@@ -34,13 +34,27 @@ defmodule TwelveDays do
   end
 
   def build_ending(state = %{}) do
-    ending = "#{state.cardinal} #{state.item}."
+    ending =
+      cond do
+        state.verse_number == 1 ->
+          "#{state.cardinal} #{state.item}."
+        true ->
+          verse_data = get_verse_data(1)
+          "and #{verse_data.cardinal} #{verse_data.item}."
+      end
+
     output = state.output ++ [ending]
     Map.put(state, :output, output)
   end
 
   def build_middle_verses(state = %{}) do
+    middle = Enum.map(state.verse_number..2, fn(verse_number)->
+      verse_data = get_verse_data(verse_number)
+      "#{verse_data.cardinal} #{verse_data.item}"
+    end)
 
+    output = state.output ++ middle
+    Map.put(state, :output, output)
   end
 
   def get_verse_data(n) do
