@@ -1,5 +1,4 @@
 defmodule Acronym do
-
   @module_doc ~S"""
   Nice! This challenge, coupled with a comment from an earlier exercise helped
   me stop a pattern I found annoying (noted in an exercise before):
@@ -17,6 +16,21 @@ defmodule Acronym do
   Awesome!
   """
 
+  @doc """
+  Generate an acronym from a string.
+  "This is a string" => "TIAS"
+
+  iex> Acronym.abbreviate("This is a string")
+  "TIAS"
+
+  iex> Acronym.abbreviate("HyperText Markup Language")
+  "HTML"
+
+  # WhatAboutMorethanJustTwoUpperCaseletters
+  iex> Acronym.abbreviate("WhatAboutMorethanJustTwoUpperCaseletters Acronym")
+  "WAMJTUCA"
+  """
+  @spec abbreviate(String.t()) :: String.t()
   def abbreviate(input) when is_binary(input) do
     input
     |> handle_punctuation()
@@ -39,8 +53,10 @@ defmodule Acronym do
     end)
   end
 
+  # Issue: WhatAboutMorethanJustTwoUpperCaseletters?
   def take_first_letter_from_element(word) do
     cond do
+      # This has to handle combining the letters after they are processed as well.
       has_inconsistent_case?(word) ->
         # find first upper, split there, send to take_first_letters_from_each_element()
         split_word = String.split(word, "", trim: true)
@@ -48,10 +64,17 @@ defmodule Acronym do
 
         second_uppercase_letter_index = Enum.find_index(rest, fn(el)-> el == String.upcase(el) end)
 
-        Enum.slice(rest, second_uppercase_letter_index, Enum.count(rest))
+        second = Enum.slice(rest, second_uppercase_letter_index, Enum.count(rest))
         |> Enum.join("")
         |> take_first_letter_from_element()
 
+
+        first_word =
+          split_word
+          |> Enum.slice(0, second_uppercase_letter_index - 1)
+          |> Enum.join()
+
+        take_first_letter_from_element(first_word) <> second
       true ->
         [[first]] = Regex.scan(~r/^./, word)
         String.upcase(first)
