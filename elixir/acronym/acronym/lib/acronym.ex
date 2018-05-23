@@ -91,9 +91,10 @@ defmodule Acronym do
       |> String.split("", trim: true)
       |> Enum.reduce(0, fn(el, acc)->
         if el == String.upcase(el) do
-          acc = acc + 1
+          acc + 1
+        else
+          acc
         end
-        acc # unsafe var here, cool, let's fix this later.
       end)
 
     if count_of_upper > 1 do
