@@ -44,19 +44,21 @@ defmodule Acronym do
     |> String.replace("-", " ")
   end
 
-  def split_sentence_by_spaces(input), do:  String.split(input, " ")
+  def split_sentence_by_spaces(input), do: String.split(input, " ")
 
   def take_first_letter_from_element(word) do
     cond do
       has_inconsistent_case?(word) ->
         split_word = String.split(word, "", trim: true)
-        [ _ | rest] = split_word
+        [_ | rest] = split_word
 
-        second_uppercase_letter_index = Enum.find_index(rest, fn(el)-> el == String.upcase(el) end)
+        second_uppercase_letter_index =
+          Enum.find_index(rest, fn el -> el == String.upcase(el) end)
 
-        second = Enum.slice(rest, second_uppercase_letter_index, Enum.count(rest))
-        |> Enum.join("")
-        |> take_first_letter_from_element()
+        second =
+          Enum.slice(rest, second_uppercase_letter_index, Enum.count(rest))
+          |> Enum.join("")
+          |> take_first_letter_from_element()
 
         first_word =
           split_word
@@ -64,6 +66,7 @@ defmodule Acronym do
           |> Enum.join()
 
         take_first_letter_from_element(first_word) <> second
+
       true ->
         [[first]] = Regex.scan(~r/^./, word)
         String.upcase(first)
@@ -89,7 +92,7 @@ defmodule Acronym do
     count_of_upper =
       input
       |> String.split("", trim: true)
-      |> Enum.reduce(0, fn(el, acc)->
+      |> Enum.reduce(0, fn el, acc ->
         if el == String.upcase(el) do
           acc + 1
         else
@@ -105,5 +108,4 @@ defmodule Acronym do
   end
 
   def combine_first_letters(input), do: Enum.join(input, "")
-
 end
