@@ -35,7 +35,7 @@ defmodule Acronym do
     input
     |> handle_punctuation()
     |> split_sentence_by_spaces()
-    |> take_first_letters_from_each_element() # Enum.map -> fun
+    |> Enum.map(fn el -> take_first_letter_from_element(el) end)
     |> combine_first_letters()
   end
 
@@ -46,28 +46,17 @@ defmodule Acronym do
 
   def split_sentence_by_spaces(input), do:  String.split(input, " ")
 
-  def take_first_letters_from_each_element(input) do
-    input
-    |> Enum.map(fn(el)->
-      take_first_letter_from_element(el)
-    end)
-  end
-
-  # Issue: WhatAboutMorethanJustTwoUpperCaseletters?
   def take_first_letter_from_element(word) do
     cond do
-      # This has to handle combining the letters after they are processed as well.
       has_inconsistent_case?(word) ->
-        # find first upper, split there, send to take_first_letters_from_each_element()
         split_word = String.split(word, "", trim: true)
-        [first | rest] = split_word
+        [ _ | rest] = split_word
 
         second_uppercase_letter_index = Enum.find_index(rest, fn(el)-> el == String.upcase(el) end)
 
         second = Enum.slice(rest, second_uppercase_letter_index, Enum.count(rest))
         |> Enum.join("")
         |> take_first_letter_from_element()
-
 
         first_word =
           split_word
