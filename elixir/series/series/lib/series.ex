@@ -9,18 +9,16 @@ defmodule StringSeries do
   def slices(_, slice_size) when slice_size <= 0, do: []
 
   def slices(binary, slice_size) do
-
     split_binary = binary |> String.split("", trim: true)
 
     binary
     |> String.split("", trim: true)
     |> Enum.with_index()
     |> Enum.map(fn {_el, index} ->
-
       target_index = slice_size - 1 + index
 
       if target_index < length(split_binary) do
-        Enum.reduce(index..target_index, "", fn(range_el, acc) ->
+        Enum.reduce(index..target_index, "", fn range_el, acc ->
           acc <> Enum.at(split_binary, range_el)
         end)
       end
