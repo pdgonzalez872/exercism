@@ -11,18 +11,14 @@ defmodule RunLengthEncoder do
     result =
       cond do
 
-        #
-        # TODO: This is not correct
-        # this has or not digit. What are we trying to do?
-
-        !has_digits?(input) ->
-          :no_digits
-
         input == "" ->
           :empty
 
         has_digits?(input) ->
           :decode
+
+        !has_digits?(input) ->
+          :encode
 
         true ->
           :not_handled
@@ -38,7 +34,7 @@ defmodule RunLengthEncoder do
     raise "This condition has not been handled yet."
   end
 
-  def handle_input({input, :decode}) do
+  def handle_input({input, :encode}) do
     input
     |> String.split("", trim: true)
     |> create_data_structure()
@@ -46,7 +42,7 @@ defmodule RunLengthEncoder do
   end
 
   defp has_digits?(input) do
-    !Regex.match?(~r/\d/, input)
+    Regex.match?(~r/\d/, input)
   end
 
   def create_data_structure(input) do
@@ -63,7 +59,11 @@ defmodule RunLengthEncoder do
   def combine_data_structure(input) do
     input
     |> Enum.reduce("", fn({k, v}, acc) ->
-      acc <> "#{v}#{k}"
+      if v == 1 do
+        acc <> "#{k}"
+      else
+        acc <> "#{v}#{k}"
+      end
     end)
   end
 end
