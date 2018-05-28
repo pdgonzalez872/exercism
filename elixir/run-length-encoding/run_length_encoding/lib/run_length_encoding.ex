@@ -47,7 +47,9 @@ defmodule RunLengthEncoder do
       target_list = Enum.slice(split_input, index..-1)
 
       # find the first non current letter -> I want the index of B
-      letter_change_index = Enum.find()
+      require IEx; IEx.pry
+
+      #letter_change_index = Enum.find()
 
       # get the current index, minus the change of index, add that to the letter.
 
@@ -89,30 +91,45 @@ defmodule RunLengthEncoder do
     end)
   end
 
+  @doc ~S"""
+  End result -> "WWBW" == ["WW", "B", "W"]
+  Intermediate result -> ["W", "W", "B", "W"]
+  recursive function that I choose where the next index is -> the first non-repetitive
+  """
   def split_into_sections(input) do
+
     split_input =
       input
       |> String.split("", trim: true)
 
     result = split_input
+    |> IO.inspect()
     |> Enum.with_index()
-    |> Enum.reduce("", fn el, acc ->
+    |> Enum.map(fn el ->
       {letter, index} = el
 
-      # create a new list
-      target_list = Enum.slice(split_input, index..-1)
+      target_list = Enum.slice(split_input, (index)..-1)
 
-      # take_while
-      repetitions = Enum.take_while(target_list, fn new_list_el ->
-        letter == new_list_el
-      end) |> Enum.count()
+      letter_change_index = Enum.find_index(target_list, fn e -> e != letter end)
 
-      if repetitions == 1 do
-        acc <> "#{letter}"
-      else
-        acc <> "#{repetitions}#{letter}"
+      cond do
+
+        # last letter
+        is_nil(letter_change_index) ->
+          nil
+
+# TODO: Continue here, play with indexes so I can sort stuff
+
+        # only one letter
+        (letter_change_index - 1) == 0 ->
+          %{output: letter, index: index}
+
+        true ->
+          output = Enum.slice(split_input, index..letter_change_index - 1) |> Enum.join("")
+          %{output: output,
+          index: index}
       end
-
     end)
+    |> Enum.filter(fn e -> !is_nil(e) end)
   end
 end

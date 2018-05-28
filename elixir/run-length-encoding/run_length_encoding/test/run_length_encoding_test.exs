@@ -14,9 +14,9 @@ defmodule RunLengthEncoderTest do
   end
 
   @tag :this
-  test "encoded single characters mixed with repeated characters" do
-    assert RunLengthEncoder.encode("WWBW") ===
-             "2WBW"
+  test "split while" do
+    result = RunLengthEncoder.split_into_sections("WWBW")
+    assert result == ["WW", "B", "W"]
   end
 
   @tag :pending
