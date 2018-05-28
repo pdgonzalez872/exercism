@@ -9,7 +9,7 @@ defmodule RunLengthEncoderTest do
     assert RunLengthEncoder.encode("XYZ") === "XYZ"
   end
 
-  @tag :pending
+  @tag :this
   test "encode string with no single characters" do
     assert RunLengthEncoder.encode("AABBBCCCC") == "2A3B4C"
   end
