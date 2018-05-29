@@ -94,12 +94,7 @@ defmodule Sublist do
     a == b
   end
 
-  def unequal?(a, b, strat = :regex) do
-    !equal?(a, b, strat)
-  end
-
-  # TODO, refactor to one function only
-  def unequal?(a, b, strat = :list) do
+  def unequal?(a, b, strat) do
     !equal?(a, b, strat)
   end
 
@@ -120,7 +115,4 @@ defmodule Sublist do
   def truncate_to_integer(element) do
     Regex.replace(~r/\..+/, "#{element}", "")
   end
-
-  # for the large lists, break them down.
-  # use recursion -> must find the first index that matches a == b
 end
