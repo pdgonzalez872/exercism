@@ -1,5 +1,4 @@
 defmodule RunLengthEncoder do
-
   def encode(""), do: ""
 
   def encode(input) do
@@ -32,8 +31,9 @@ defmodule RunLengthEncoder do
 
   def decode(input) do
     cond do
-       does_not_contain_digit(input)->
+      does_not_contain_digit(input) ->
         input
+
       true ->
         input
         |> String.split("", trim: true)
