@@ -15,8 +15,19 @@ defmodule RunLengthEncoderTest do
 
   @tag :this
   test "split while" do
-    result = RunLengthEncoder.split_into_sections("WWBW")
+    result = RunLengthEncoder.split_into_sections(["W", "W", "B", "W", "A"], [])
+    assert result == ["WW", "B", "W", "A"]
+  end
+
+  @tag :pending
+  test "split while sa" do
+    result = RunLengthEncoder.split_into_sections(["W", "W", "B", "W"], "")
     assert result == ["WW", "B", "W"]
+  end
+
+  test "split while s" do
+    result = RunLengthEncoder.split_into_sections(["X", "Y", "Z"])
+    assert result == ["X", "Y", "Z"]
   end
 
   @tag :pending
