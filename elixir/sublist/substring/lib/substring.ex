@@ -72,7 +72,7 @@ defmodule Sublist do
     |> Enum.with_index()
     |> Enum.reduce([], fn el, acc ->
       {value, index} = el
-      if value == Enum.at(a, 0) do
+      if value === Enum.at(a, 0) do
         acc ++ [index]
       else
         acc
