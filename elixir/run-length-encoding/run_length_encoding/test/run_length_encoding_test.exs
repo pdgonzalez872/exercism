@@ -35,33 +35,33 @@ defmodule RunLengthEncoderTest do
     assert RunLengthEncoder.decode("") === ""
   end
 
-  @tag :pending
   test "decode single characters only" do
     assert RunLengthEncoder.decode("XYZ") === "XYZ"
   end
 
-  @tag :pending
+  @tag :this
   test "decode string with no single characters" do
     assert RunLengthEncoder.decode("2A3B4C") == "AABBBCCCC"
   end
 
-  @tag :pending
+  test "ds 1" do
+    assert RunLengthEncoder.destructure_input(["W"], "") == "W"
+    assert RunLengthEncoder.destructure_input(["2", "W"], "") == "WW"
+  end
+
   test "decode single characters with repeated characters" do
     assert RunLengthEncoder.decode("12WB12W3B24WB") ===
              "WWWWWWWWWWWWBWWWWWWWWWWWWBBBWWWWWWWWWWWWWWWWWWWWWWWWB"
   end
 
-  @tag :pending
   test "decode multiple whitespace mixed in string" do
     assert RunLengthEncoder.decode("2 hs2q q2w2 ") === "  hsqq qww  "
   end
 
-  @tag :pending
   test "decode lower case string" do
     assert RunLengthEncoder.decode("2a3b4c") === "aabbbcccc"
   end
 
-  @tag :pending
   test "encode followed by decode gives original string" do
     original = "zzz ZZ  zZ"
     encoded = RunLengthEncoder.encode(original)
