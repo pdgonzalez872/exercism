@@ -23,9 +23,12 @@ defmodule SubstringTest do
     assert Sublist.compare(l, l) == :equal
   end
 
-  @tag :this
   test "sublist at start" do
     assert Sublist.compare([1, 2, 3], [1, 2, 3, 4, 5]) == :sublist
+  end
+
+  test "sublist at starts " do
+    assert Sublist.sublist?([1, 2, 3], [1, 2, 3, 4, 5], :list) == true
   end
 
   test "sublist in middle" do
@@ -40,12 +43,10 @@ defmodule SubstringTest do
     assert Sublist.compare([1, 1, 2], [1, 1, 1, 2]) == :sublist
   end
 
-  @tag :pending
   test "sublist early in huge list" do
     assert Sublist.compare([3, 4, 5], Enum.to_list(1..1_000_000)) == :sublist
   end
 
-  @tag :pending
   test "huge sublist not in huge list" do
     assert Sublist.compare(Enum.to_list(10..1_000_001), Enum.to_list(1..1_000_000)) == :unequal
   end
@@ -75,6 +76,7 @@ defmodule SubstringTest do
     assert Sublist.compare(Enum.to_list(1..1_000_000), [3, 4, 5]) == :superlist
   end
 
+  @tag :pending
   test "strict equality needed" do
     assert Sublist.compare([1], [1.0, 2]) == :unequal
   end
