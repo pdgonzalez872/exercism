@@ -13,8 +13,6 @@ defmodule RunLengthEncoder do
   def split_into_sections(list, output) do
     [letter | _] = list
 
-    letter_change_index = Enum.find_index(list, fn e -> e != letter end)
-
     repetition_count =
       list
       |> Enum.take_while(fn new_list_el -> letter == new_list_el end)
@@ -59,24 +57,29 @@ defmodule RunLengthEncoder do
         destructure_input(rest, new_output)
 
       true ->
-        # find the first letter
         digits = Enum.take_while(list, fn el -> is_digit(el) end)
+
         index_on_non_digit = Enum.count(digits)
+        new_list = Enum.drop(list, index_on_non_digit + 1)
         target_letter = Enum.at(list, index_on_non_digit)
 
-        repetitions =
+        new_output =
           digits
-          |> Enum.join("")
-          |> String.to_integer()
-
-        # build output
-        new_output = Enum.reduce(1..repetitions, "", fn el, acc -> acc <> target_letter end)
-
-        # build new list
-        new_list = Enum.drop(list, index_on_non_digit + 1)
+          |> create_repetitions()
+          |> create_new_output(target_letter)
 
         destructure_input(new_list, output <> new_output)
     end
+  end
+
+  def create_repetitions(digits) do
+    digits
+    |> Enum.join("")
+    |> String.to_integer()
+  end
+
+  def create_new_output(repetitions, target_letter) do
+    Enum.reduce(1..repetitions, "", fn _el, acc -> acc <> target_letter end)
   end
 
   def does_not_contain_digit(input) do
