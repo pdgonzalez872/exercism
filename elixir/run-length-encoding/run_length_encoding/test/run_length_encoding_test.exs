@@ -9,25 +9,15 @@ defmodule RunLengthEncoderTest do
     assert RunLengthEncoder.encode("XYZ") === "XYZ"
   end
 
+  @tag :pending
   test "encode string with no single characters" do
     assert RunLengthEncoder.encode("AABBBCCCC") == "2A3B4C"
   end
 
   @tag :this
-  test "split while" do
-    result = RunLengthEncoder.split_into_sections(["W", "W", "B", "W", "A"], [])
-    assert result == ["WW", "B", "W", "A"]
-  end
-
-  @tag :pending
   test "split while sa" do
-    result = RunLengthEncoder.split_into_sections(["W", "W", "B", "W"], "")
-    assert result == ["WW", "B", "W"]
-  end
-
-  test "split while s" do
-    result = RunLengthEncoder.split_into_sections(["X", "Y", "Z"])
-    assert result == ["X", "Y", "Z"]
+    result = RunLengthEncoder.encode("WWBW")
+    assert result == "2WBW"
   end
 
   @tag :pending
