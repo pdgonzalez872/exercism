@@ -26,8 +26,6 @@ defmodule Sublist do
         :unequal
 
       true ->
-        require IEx
-        IEx.pry()
         :sheep
     end
   end
