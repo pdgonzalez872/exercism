@@ -44,11 +44,6 @@ defmodule RunLengthEncoderTest do
     assert RunLengthEncoder.decode("2A3B4C") == "AABBBCCCC"
   end
 
-  test "ds 1" do
-    assert RunLengthEncoder.destructure_input(["W"], "") == "W"
-    assert RunLengthEncoder.destructure_input(["2", "W"], "") == "WW"
-  end
-
   test "decode single characters with repeated characters" do
     assert RunLengthEncoder.decode("12WB12W3B24WB") ===
              "WWWWWWWWWWWWBWWWWWWWWWWWWBBBWWWWWWWWWWWWWWWWWWWWWWWWB"
