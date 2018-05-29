@@ -1,4 +1,7 @@
 defmodule RunLengthEncoder do
+
+  def encode(""), do: ""
+
   def encode(input) do
     input
     |> String.split("", trim: true)
@@ -13,9 +16,8 @@ defmodule RunLengthEncoder do
     letter_change_index = Enum.find_index(list, fn e -> e != letter end)
 
     repetition_count =
-      Enum.take_while(list, fn new_list_el ->
-        letter == new_list_el
-      end)
+      list
+      |> Enum.take_while(fn new_list_el -> letter == new_list_el end)
       |> Enum.count()
 
     new_output =
