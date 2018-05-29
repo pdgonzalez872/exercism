@@ -23,18 +23,16 @@ defmodule Sublist do
       sublist?(a, b, strat) ->
         :sublist
 
-       unequal?(a, b, strat)->
+      unequal?(a, b, strat) ->
         :unequal
       
       true ->
-        # require IEx; IEx.pry
-        raise "wooo"
+        require IEx; IEx.pry
+        :sheep
     end
   end
 
   def choose_strategy(a, b) do
-    # Deal with correct precision "1.0" vs "1"
-
     large_list_max = 100
 
     cond do
@@ -59,7 +57,7 @@ defmodule Sublist do
   end
 
   def superlist?(a, b, :list) do
-
+    sublist?(b, a, :list)
   end
 
   def sublist?(a, b, :regex) do
@@ -70,39 +68,18 @@ defmodule Sublist do
   end
 
   def sublist?(a, b, :list) do
-    a_length = Enum.count(a)
-    target_value = Enum.at(a, 0)
-
-    # Pick where to start -> get multiple places of "where to start"
-    # get first or (first + second -> optmization) item from a. Find indexes of where those are in b
-
-    places_to_start =
-      b
-      |> Enum.with_index()
-      |> Enum.reduce([], fn el, acc ->
-        {value, index} = el
-        if value == target_value do
-          acc ++ [index]
-        else
-          acc
-        end
-      end)
-
-    # for each of those indexes, create lists of length a
-    potential_matches =
-      places_to_start
-      |> Enum.map(fn el ->
-        Enum.slice(b, el, a_length)
-      end)
-
-    # Check if a is equal to a sublist. That means a is included in b.
-    Enum.any?(potential_matches, fn sublist_from_b ->
-      a == sublist_from_b
+    b
+    |> Enum.with_index()
+    |> Enum.reduce([], fn el, acc ->
+      {value, index} = el
+      if value == Enum.at(a, 0) do
+        acc ++ [index]
+      else
+        acc
+      end
     end)
-  end
-
-  def partition_list(list, desired_length) do
-
+    |> Enum.map(fn el -> Enum.slice(b, el, Enum.count(a)) end)
+    |> Enum.any?(fn sublist_from_b -> a == sublist_from_b end)
   end
 
   def equal?(a, b, :regex) do
@@ -120,8 +97,9 @@ defmodule Sublist do
     !equal?(a, b, strat)
   end
 
-  def unequal?(a, b, :list) do
-
+  # TODO, refactor to one function only
+  def unequal?(a, b, strat = :list) do
+    !equal?(a, b, strat)
   end
 
   def a_b_to_string(a, b) do

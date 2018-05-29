@@ -71,12 +71,10 @@ defmodule SubstringTest do
     assert Sublist.compare([1, 1, 1, 2], [1, 1, 2]) == :superlist
   end
 
-  @tag :pending
   test "superlist early in huge list" do
     assert Sublist.compare(Enum.to_list(1..1_000_000), [3, 4, 5]) == :superlist
   end
 
-  @tag :pending
   test "strict equality needed" do
     assert Sublist.compare([1], [1.0, 2]) == :unequal
   end
