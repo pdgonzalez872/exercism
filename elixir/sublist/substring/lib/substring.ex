@@ -1,5 +1,5 @@
 defmodule Sublist do
-  @module_doc"""
+  @module_doc """
   The Regex strategy fails when dealing with floats -> 1 != 1.0
   May need to compare with lists.
 
@@ -10,7 +10,6 @@ defmodule Sublist do
   def compare(_, []), do: :superlist
 
   def compare(a, b) do
-
     strat = choose_strategy(a, b)
 
     cond do
@@ -19,15 +18,16 @@ defmodule Sublist do
 
       superlist?(a, b, strat) ->
         :superlist
-        
+
       sublist?(a, b, strat) ->
         :sublist
 
       unequal?(a, b, strat) ->
         :unequal
-      
+
       true ->
-        require IEx; IEx.pry
+        require IEx
+        IEx.pry()
         :sheep
     end
   end
@@ -38,8 +38,10 @@ defmodule Sublist do
     cond do
       Enum.count(a) > large_list_max || Enum.count(b) > large_list_max ->
         :list
+
       contains_float?(a) || contains_float?(b) ->
         :list
+
       true ->
         :regex
     end
@@ -72,6 +74,7 @@ defmodule Sublist do
     |> Enum.with_index()
     |> Enum.reduce([], fn el, acc ->
       {value, index} = el
+
       if value === Enum.at(a, 0) do
         acc ++ [index]
       else
