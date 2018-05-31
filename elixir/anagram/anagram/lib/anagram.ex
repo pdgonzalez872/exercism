@@ -1,6 +1,5 @@
 defmodule Anagram do
   def match(base, candidates) do
-
     prepared_base = prepare_word(base)
 
     candidates
@@ -8,15 +7,14 @@ defmodule Anagram do
     |> remove_source_word(base)
     |> prepare_candidates()
     |> Enum.map(fn el ->
+      {e, index} = el
 
-        {e, index} = el
-
-        if prepared_base == e do
-          Enum.at(candidates, index)
-        else
-          nil
-        end
-      end)
+      if prepared_base == e do
+        Enum.at(candidates, index)
+      else
+        nil
+      end
+    end)
     |> Enum.filter(fn el -> !is_nil(el) end)
   end
 
@@ -37,9 +35,8 @@ defmodule Anagram do
   end
 
   def remove_source_word(candidates, source_word) do
-    candidates
-    |> Enum.filter(fn el ->
-      {e, index} = el
+    Enum.filter(candidates, fn el ->
+      {e, _index} = el
       !(String.downcase(source_word) == String.downcase(e))
     end)
   end
