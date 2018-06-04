@@ -22,25 +22,17 @@ defmodule BracketPush do
         true
 
       _ ->
-        {_first, _last, net_input} =
-          processed_input
-          |> String.split("", trim: true)
-          |> extract_data_from_input()
-
-        check_brackets(net_input)
+        processed_input
+        |> String.split("", trim: true)
+        |> extract_data_from_input()
+        |> check_brackets()
     end
   end
 
   def extract_data_from_input(input) do
-    first = Enum.at(input, 0)
-    last = Enum.at(input, -1)
-
-    net_input =
-      input
-      |> List.delete_at(0)
-      |> List.delete_at(-1)
-
-    {first, last, net_input}
+    input
+    |> List.delete_at(0)
+    |> List.delete_at(-1)
   end
 
   def remove_whitespace(input) when is_binary(input) do
