@@ -41,6 +41,7 @@ defmodule BracketPush do
   end
 
   def remove_whitespace([]), do: []
+
   def remove_whitespace(input) when is_list(input) do
     input
     |> Enum.join("")
