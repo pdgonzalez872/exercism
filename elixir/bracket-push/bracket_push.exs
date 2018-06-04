@@ -2,13 +2,13 @@ defmodule BracketPush do
   def check_brackets([]), do: false
 
   def check_brackets(input) do
-    cleaned_input =
+    processed_input =
       input
       |> remove_whitespace()
       |> remove_pairs()
       |> select_valid_delimiters()
 
-    case cleaned_input do
+    case processed_input do
       "" ->
         true
 
@@ -23,7 +23,7 @@ defmodule BracketPush do
 
       _ ->
         {_first, _last, net_input} =
-          cleaned_input
+          processed_input
           |> String.split("", trim: true)
           |> extract_data_from_input()
 
@@ -48,14 +48,11 @@ defmodule BracketPush do
     |> String.replace(" ", "")
   end
 
+  def remove_whitespace([]), do: []
   def remove_whitespace(input) when is_list(input) do
-    if Enum.count(input) == 0 do
-      input
-    else
-      input
-      |> Enum.join("")
-      |> String.replace(" ", "")
-    end
+    input
+    |> Enum.join("")
+    |> String.replace(" ", "")
   end
 
   def remove_pairs(""), do: ""
