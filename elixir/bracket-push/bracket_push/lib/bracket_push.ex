@@ -1,5 +1,4 @@
 defmodule BracketPush do
-
   def check_brackets([]), do: false
 
   def check_brackets(input) do
@@ -27,6 +26,7 @@ defmodule BracketPush do
           cleaned_input
           |> String.split("", trim: true)
           |> extract_data_from_input()
+
         check_brackets(net_input)
     end
   end
@@ -59,6 +59,7 @@ defmodule BracketPush do
   end
 
   def remove_pairs(""), do: ""
+
   def remove_pairs(input) do
     input
     |> String.replace("[]", "")
@@ -68,6 +69,6 @@ defmodule BracketPush do
 
   def select_valid_delimiters(input) do
     r = ~r/[\s\d\-\+\.\&\\^*\/a-z]+/
-    Regex.replace(r,input, "")
+    Regex.replace(r, input, "")
   end
 end
