@@ -1,15 +1,4 @@
 defmodule Phone do
-  defstruct(
-    input: nil,
-    digits: nil,
-    country_code: nil,
-    area_code: nil,
-    remaining_digits: nil,
-    full_number: nil,
-    pretty_digits: nil,
-    simple_display: nil
-  )
-
   def number(input) do
     result = process_number(input)
     result.simple_display
@@ -79,7 +68,7 @@ defmodule Phone do
   def create_number({:ok, input}) do
     digits = Regex.scan(~r/\d/, input)
 
-    %Phone{input: input, digits: digits}
+    %{input: input, digits: digits}
     |> add_country_code()
     |> add_area_code()
     |> add_remaining_digits()
@@ -137,8 +126,8 @@ defmodule Phone do
 
   def add_pretty_digits(state) do
     split_remaining = String.split(state.remaining_digits, "", trim: true)
-    a = Enum.take(split_remaining, 3) |> Enum.join("")
-    b = Enum.take(split_remaining, -4) |> Enum.join("")
+    a = split_remaining |> Enum.take(3) |> Enum.join("")
+    b = split_remaining |> Enum.take(-4) |> Enum.join("")
 
     Map.put(state, :pretty_digits, "(#{state.area_code}) #{a}-#{b}")
   end
