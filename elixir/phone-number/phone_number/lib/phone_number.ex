@@ -1,5 +1,4 @@
 defmodule Phone do
-
   defstruct(
     input: nil,
     digits: nil,
@@ -47,11 +46,8 @@ defmodule Phone do
   def invalid?(input) do
     digits = Regex.scan(~r/\d/, input)
 
-    contains_letters(input) ||
-      invalid_length(digits) ||
-      invalid_country(digits) ||
-      invalid_area_code(digits) ||
-      invalid_exchange_code(digits)
+    contains_letters(input) || invalid_length(digits) || invalid_country(digits) ||
+      invalid_area_code(digits) || invalid_exchange_code(digits)
   end
 
   def contains_letters(input) do
@@ -68,12 +64,12 @@ defmodule Phone do
   end
 
   def invalid_area_code(digits) do
-    Enum.count(digits) == 10 && Enum.at(digits, 0) == ["1"] || Enum.at(digits, 0) == ["0"]
+    (Enum.count(digits) == 10 && Enum.at(digits, 0) == ["1"]) || Enum.at(digits, 0) == ["0"]
   end
 
   def invalid_exchange_code(digits) do
-     [_, _, _, exchange_code | _tail] = digits
-    Enum.count(digits) == 10 && exchange_code == ["1"] || exchange_code == ["0"]
+    [_, _, _, exchange_code | _tail] = digits
+    (Enum.count(digits) == 10 && exchange_code == ["1"]) || exchange_code == ["0"]
   end
 
   def create_number({:error, _}) do
@@ -81,7 +77,6 @@ defmodule Phone do
   end
 
   def create_number({:ok, input}) do
-
     digits = Regex.scan(~r/\d/, input)
 
     %Phone{input: input, digits: digits}
