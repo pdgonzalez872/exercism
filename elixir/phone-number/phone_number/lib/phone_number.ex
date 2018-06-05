@@ -12,55 +12,46 @@ defmodule Phone do
   )
 
   def number(input) do
-    result =
-      input
-      |> prepare_number()
-      |> create_number()
-
+    result = process_number(input)
     result.simple_display
   end
 
   def area_code(input) do
-    result =
-      input
-      |> prepare_number()
-      |> create_number()
-
+    result = process_number(input)
     result.area_code
   end
 
   def pretty(input) do
-    result =
-      input
-      |> prepare_number()
-      |> create_number()
-
+    result = process_number(input)
     result.pretty_digits
   end
 
-  def prepare_number(input) do
+  def process_number(input) do
+    input
+    |> prepare_number()
+    |> create_number()
+  end
 
+  def prepare_number(input) do
+    if valid?(input) do
+      {:ok, input}
+    else
+      {:error, input}
+    end
+  end
+
+  def valid?(input) do
+    !invalid?(input)
+  end
+
+  def invalid?(input) do
     digits = Regex.scan(~r/\d/, input)
 
-    cond do
-      contains_letters(input) ->
-        {:error, :contains_letters}
-
-      invalid_length(digits) ->
-        {:error, :invalid_length}
-
-      invalid_country(digits) ->
-        {:error, :invalid_country}
-
-      invalid_area_code(digits) ->
-        {:error, :invalid_area_code}
-
-      invalid_exchange_code(digits) ->
-        {:error, :invalid_exchange_code}
-
-      true ->
-        {:ok, input}
-    end
+    contains_letters(input) ||
+      invalid_length(digits) ||
+      invalid_country(digits) ||
+      invalid_area_code(digits) ||
+      invalid_exchange_code(digits)
   end
 
   def contains_letters(input) do
@@ -113,7 +104,7 @@ defmodule Phone do
           "#{a}#{b}#{c}"
 
         Enum.count(state.digits) == 11 ->
-          [a, b, c, d | _tail] = state.digits
+          [_a, b, c, d | _tail] = state.digits
           "#{b}#{c}#{d}"
 
         true ->
@@ -134,7 +125,7 @@ defmodule Phone do
     remaining_digits =
       state.digits
       |> Enum.with_index()
-      |> Enum.filter(fn {e, index} -> index > target_index end)
+      |> Enum.filter(fn {_e, index} -> index > target_index end)
       |> Enum.map(fn el ->
         {e, _index} = el
         e
