@@ -9,27 +9,23 @@ defmodule Prime do
   numbers, pretend they don't exist and implement them yourself.
   """
   @spec nth(non_neg_integer) :: non_neg_integer
-  def nth(0), do: raise "Not a prime."
+  def nth(0), do: raise("Not a prime.")
   def nth(1), do: 2
 
   def nth(non_neg_integer) when is_integer(non_neg_integer) do
-    # receive a number, have to loop while you find a certain number of primes.
-    # If you pass in 6, it gives you the first 6.
-
     nth(%{nth: non_neg_integer, primes: [1, 2], target: 3})
   end
 
   def nth(state) when is_map(state) do
-
     if Enum.count(state.primes) == state.nth + 1 do
       Enum.at(state.primes, -1)
     else
-
-      new_state = if is_prime?(state.target) do
-        Map.put(state, :primes, state.primes ++ [state.target])
-      else
-        state
-      end
+      new_state =
+        if is_prime?(state.target) do
+          Map.put(state, :primes, state.primes ++ [state.target])
+        else
+          state
+        end
 
       nth(Map.put(new_state, :target, state.target + 1))
     end
@@ -51,9 +47,12 @@ defmodule Prime do
       false
     else
       ceiling = :math.sqrt(non_neg_integer) |> trunc()
-      divisible_by = Enum.filter(3..ceiling, fn el ->
-        rem(non_neg_integer, el) == 0
-      end)
+
+      divisible_by =
+        Enum.filter(3..ceiling, fn el ->
+          rem(non_neg_integer, el) == 0
+        end)
+
       Enum.count(divisible_by) == 0
     end
   end
