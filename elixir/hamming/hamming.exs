@@ -19,7 +19,6 @@ defmodule Hamming do
         {:error, "Lists must be the same length"}
 
       true ->
-        require IEx; IEx.pry
         not_equal_count =
           Enum.zip(strand1, strand2)
           |> Enum.reduce(0, fn({s1, s2}, acc) ->
