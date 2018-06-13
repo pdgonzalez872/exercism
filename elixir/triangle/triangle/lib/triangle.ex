@@ -1,38 +1,43 @@
 defmodule Triangle do
-
+  def kind(a, b, c) when a <= 0 or b <= 0 or c <= 0 do
+    {:error, "all side lengths must be positive"}
+  end
 
   def kind(a, b, c) do
-    cond do
-      is_a_valid_triangle?(a, b, c) ->
-        "na"
+    side_list = [a, b, c]
 
-      is_equilateral?(a, b, c) ->
+    cond do
+      !is_a_valid_triangle?(side_list) ->
+        {:error, "side lengths violate triangle inequality"}
+
+      is_equilateral?(side_list) ->
         {:ok, :equilateral}
+
+      is_isosceles?(side_list) ->
+        {:ok, :isosceles}
+
+      is_scalene?(side_list) ->
+        {:ok, :scalene}
 
       true ->
         {:error}
     end
   end
 
-  def is_equilateral?(a, b, c) do
-    
-    # target = a
-    # Enum.all?([a, b, c], fn(el) -> el == target end)
-    count = get_count(a, b, c)
-    count == 3
+  def is_equilateral?(side_list), do: get_count(side_list) == 1
+
+  def is_isosceles?(side_list), do: get_count(side_list) == 2
+
+  def is_scalene?(side_list), do: get_count(side_list) == 3
+
+  def is_a_valid_triangle?(side_list) do
+    [a, b, c] = side_list
+
+    a + b > c and b + c > a and a + c > b
   end
 
-  def is_isosceles(a, b, c) do
-    set = MapSet.new([a, b, c])
-    Enum.count(set)
-  end
-
-  def is_a_valid_triangle?(a, b, c) do
-    false
-  end
-
-  def get_count(a, b, c) do
-    [a, b, c]
+  def get_count(side_list) do
+    side_list
     |> MapSet.new()
     |> Enum.count()
   end
