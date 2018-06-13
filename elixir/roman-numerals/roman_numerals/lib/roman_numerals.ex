@@ -34,12 +34,11 @@ defmodule Roman do
   def calculate_roman_numeral(state = %{}) do
     result = @roman_numerals_mapping
     |> Enum.reverse()
-    |> Enum.find(fn {int, roman} ->
+    |> Enum.find(fn {int, _roman} ->
       state.input >= int
     end)
 
     {int, roman} = result
-    #require IEx; IEx.pry
 
     state
     |> Map.put(:output, state.output ++ [roman])
