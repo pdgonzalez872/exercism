@@ -1,0 +1,2 @@
+defmodule AllYourBase do
+end
