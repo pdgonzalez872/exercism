@@ -1,0 +1,2 @@
+defmodule School do
+end
