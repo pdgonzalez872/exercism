@@ -1,9 +1,8 @@
 defmodule BeerSong do
-
-  def verse(2) do
+  def verse(0) do
     """
-    2 bottles of beer on the wall, 2 bottles of beer.
-    Take one down and pass it around, 1 bottle of beer on the wall.
+    No more bottles of beer on the wall, no more bottles of beer.
+    Go to the store and buy some more, 99 bottles of beer on the wall.
     """
   end
 
@@ -14,10 +13,10 @@ defmodule BeerSong do
     """
   end
 
-  def verse(0) do
+  def verse(2) do
     """
-    No more bottles of beer on the wall, no more bottles of beer.
-    Go to the store and buy some more, 99 bottles of beer on the wall.
+    2 bottles of beer on the wall, 2 bottles of beer.
+    Take one down and pass it around, 1 bottle of beer on the wall.
     """
   end
 
@@ -35,7 +34,7 @@ defmodule BeerSong do
   end
 
   def lyrics() do
-  99..0
-  |> lyrics()
+    99..0
+    |> lyrics()
   end
 end
