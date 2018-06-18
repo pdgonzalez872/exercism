@@ -63,6 +63,9 @@ defmodule Tournament do
 
     iex> Tournament.create_match(["Allegoric Alaskans", "Blithering Badgers", "loss"])
     %Tournament.Match{home_team: "Allegoric Alaskans", away_team: "Blithering Badgers", home_team_result: :loss, away_team_result: :win, raw_match_result: "loss", home_team_points: 0, away_team_points: 3}
+
+    iex> Tournament.create_match(["Allegoric Alaskans", "Blithering Badgers", "draw"])
+    %Tournament.Match{home_team: "Allegoric Alaskans", away_team: "Blithering Badgers", home_team_result: :draw, away_team_result: :draw, raw_match_result: "draw", home_team_points: 1, away_team_points: 1}
   """
   def create_match(input) do
     [home_team, away_team, raw_match_result] = input
@@ -88,5 +91,13 @@ defmodule Tournament do
     |> Map.put(:away_team_result, :win)
     |> Map.put(:home_team_points, 0)
     |> Map.put(:away_team_points, 3)
+  end
+
+  def score_match(match = %Match{raw_match_result: "draw"}) do
+    match
+    |> Map.put(:home_team_result, :draw)
+    |> Map.put(:away_team_result, :draw)
+    |> Map.put(:home_team_points, 1)
+    |> Map.put(:away_team_points, 1)
   end
 end
