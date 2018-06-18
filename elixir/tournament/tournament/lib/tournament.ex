@@ -1,5 +1,5 @@
 defmodule Tournament do
-  defmodule Team do
+  defmodule Result do
     defstruct(
       name: nil,
       matches_played: 0,
@@ -145,20 +145,37 @@ defmodule Tournament do
   end
 
   def calculate_results(team_results) do
-    unique_teams =
+    result =
       team_results
-      |> Enum.map(fn tr -> tr.team_name end)
-      |> MapSet.new()
-
-    team_structs =
-      unique_teams
-      |> Enum.map(fn team ->
-        %Team{name: team, wins: 0, losses: 0, draws: 0, points: 0}
+      |> Enum.group_by(fn tr -> tr.team_name end)
+      |> Enum.reduce("", fn group, group_acc ->
+        {team_name, results} = group
+        Enum.reduce(results, %Result{name: team_name}, fn r, acc ->
+          update_result(acc, r)
+        end)
       end)
 
-    Enum.reduce(team_results, team_structs, fn tr, acc ->
-      # require IEx; IEx.pry
-      raise "continue here. Need to aggregate the results here."
-    end)
+    require IEx; IEx.pry
+  end
+
+  def update_result(result = %Result{}, %{result: :win}) do
+    result
+    |> Map.put(:wins, result.wins + 1)
+    |> Map.put(:points, result.points + 3)
+    |> Map.put(:matches_played, result.matches_played + 1)
+  end
+
+  def update_result(result = %Result{}, %{result: :loss}) do
+    result
+    |> Map.put(:losses, result.losses + 1)
+    |> Map.put(:points, result.points + 0)
+    |> Map.put(:matches_played, result.matches_played + 1)
+  end
+
+  def update_result(result = %Result{}, %{result: :draw}) do
+    result
+    |> Map.put(:draws, result.draws + 1)
+    |> Map.put(:points, result.points + 1)
+    |> Map.put(:matches_played, result.matches_played + 1)
   end
 end
