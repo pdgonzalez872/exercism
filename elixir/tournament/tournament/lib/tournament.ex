@@ -74,24 +74,7 @@ defmodule Tournament do
   @doc ~S"""
   Scores a match based on input
   """
-  def score_match(match = %Match{}) do
-    case match.raw_match_result do
-      "win" ->
-        price_match(match, "win")
-
-      "loss" ->
-        price_match(match, "loss")
-
-      "draw" ->
-        nil
-
-      _ ->
-        raise "Bad input"
-
-    end
-  end
-
-  def price_match(match, "win") do
+  def score_match(match = %Match{raw_match_result: "win"}) do
     match
     |> Map.put(:home_team_result, :win)
     |> Map.put(:away_team_result, :loss)
@@ -99,12 +82,11 @@ defmodule Tournament do
     |> Map.put(:away_team_points, 0)
   end
 
-  def price_match(match, "loss") do
+  def score_match(match = %Match{raw_match_result: "loss"}) do
     match
     |> Map.put(:home_team_result, :loss)
     |> Map.put(:away_team_result, :win)
     |> Map.put(:home_team_points, 0)
     |> Map.put(:away_team_points, 3)
   end
-
 end
