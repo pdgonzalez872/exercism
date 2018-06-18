@@ -99,7 +99,11 @@ defmodule Tournament do
   def create_match(input) when length(input) == 3 do
     [home_team, away_team, raw_match_result] = input
 
-    %Match{home_team: home_team, away_team: away_team, raw_match_result: raw_match_result}
+    %Match{
+      home_team: home_team,
+      away_team: away_team,
+      raw_match_result: raw_match_result
+    }
     |> score_match()
   end
 
@@ -162,16 +166,15 @@ defmodule Tournament do
   end
 
   def calculate_results(team_results) do
-    result =
-      team_results
-      |> Enum.group_by(fn tr -> tr.team_name end)
-      |> Enum.map(fn group ->
-        {team_name, results} = group
+    team_results
+    |> Enum.group_by(fn tr -> tr.team_name end)
+    |> Enum.map(fn group ->
+      {team_name, results} = group
 
-        Enum.reduce(results, %Summary{name: team_name}, fn r, acc ->
-          update_result(acc, r)
-        end)
+      Enum.reduce(results, %Summary{name: team_name}, fn r, acc ->
+        update_result(acc, r)
       end)
+    end)
   end
 
   def update_result(result = %Summary{}, %{result: :win}) do
