@@ -35,23 +35,51 @@ defmodule Tournament do
   """
   @spec tally(input :: list(String.t())) :: String.t()
   def tally(input) do
-    # input
-    # |> Enum.map(fn match -> process_match(match) end)
-    # |> display_output()
+    # result =
+    #   input
+    #   |> create_matches()
+    #   |> create_team_results()
+    #   |> calculate_results()
+    #   |> display_results()
+
+    # require IEx
+    # IEx.pry()
   end
 
-  def process_match(input) do
-    result =
-      input
-      |> String.split(";", trim: true)
-      |> Enum.map(fn match ->
-        match
-        |> create_match()
-        |> score_match()
-      end)
+  @doc ~S"""
+  Creates matches based on the list input
 
-    require IEx
-    IEx.pry()
+  ## Examples
+    iex> Tournament.create_matches(["Allegoric Alaskans;Blithering Badgers;win", "Devastating Donkeys;Courageous Californians;draw"])
+    [
+      %Tournament.Match{
+        away_team: "Blithering Badgers",
+        away_team_points: 0,
+        away_team_result: :loss,
+        home_team: "Allegoric Alaskans",
+        home_team_points: 3,
+        home_team_result: :win,
+        raw_match_result: "win"
+      },
+      %Tournament.Match{
+        away_team: "Courageous Californians",
+        away_team_points: 1,
+        away_team_result: :draw,
+        home_team: "Devastating Donkeys",
+        home_team_points: 1,
+        home_team_result: :draw,
+        raw_match_result: "draw"
+      }
+    ]
+  """
+  def create_matches(input) do
+    input
+    |> Enum.map(fn match ->
+      match
+      |> String.split(";", trim: true)
+      |> create_match()
+      |> score_match()
+    end)
   end
 
   @doc ~S"""
@@ -99,5 +127,20 @@ defmodule Tournament do
     |> Map.put(:away_team_result, :draw)
     |> Map.put(:home_team_points, 1)
     |> Map.put(:away_team_points, 1)
+  end
+
+  @doc ~S"""
+  Creates team results from a match
+
+  ## Examples
+
+    iex> Tournament.create_team_results(%Tournament.Match{home_team: "Allegoric Alaskans", away_team: "Blithering Badgers", home_team_result: :draw, away_team_result: :draw, raw_match_result: "draw", home_team_points: 1, away_team_points: 1})
+    [%{team_name: "Allegoric Alaskans", result: :draw, points: 1}, %{team_name: "Blithering Badgers", result: :draw, points: 1}]
+  """
+  def create_team_results(match = %Match{}) do
+    [
+      %{team_name: match.home_team, result: match.home_team_result, points: match.home_team_points},
+      %{team_name: match.away_team, result: match.away_team_result, points: match.away_team_points},
+    ]
   end
 end
