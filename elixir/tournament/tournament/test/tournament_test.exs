@@ -2,7 +2,6 @@ defmodule TournamentTest do
   use ExUnit.Case
   doctest Tournament
 
-  # @tag :pending
   test "typical input" do
     input = [
       "Allegoric Alaskans;Blithering Badgers;win",

@@ -1,5 +1,5 @@
 defmodule Tournament do
-  defmodule Result do
+  defmodule Summary do
     defstruct(
       name: nil,
       matches_played: 0,
@@ -150,32 +150,58 @@ defmodule Tournament do
       |> Enum.group_by(fn tr -> tr.team_name end)
       |> Enum.reduce("", fn group, group_acc ->
         {team_name, results} = group
-        Enum.reduce(results, %Result{name: team_name}, fn r, acc ->
+        summary = Enum.reduce(results, %Summary{name: team_name}, fn r, acc ->
           update_result(acc, r)
         end)
+
+        group_acc <> create_team_output(summary)
       end)
 
     require IEx; IEx.pry
   end
 
-  def update_result(result = %Result{}, %{result: :win}) do
+  def update_result(result = %Summary{}, %{result: :win}) do
     result
     |> Map.put(:wins, result.wins + 1)
     |> Map.put(:points, result.points + 3)
     |> Map.put(:matches_played, result.matches_played + 1)
   end
 
-  def update_result(result = %Result{}, %{result: :loss}) do
+  def update_result(result = %Summary{}, %{result: :loss}) do
     result
     |> Map.put(:losses, result.losses + 1)
     |> Map.put(:points, result.points + 0)
     |> Map.put(:matches_played, result.matches_played + 1)
   end
 
-  def update_result(result = %Result{}, %{result: :draw}) do
+  def update_result(result = %Summary{}, %{result: :draw}) do
     result
     |> Map.put(:draws, result.draws + 1)
     |> Map.put(:points, result.points + 1)
     |> Map.put(:matches_played, result.matches_played + 1)
+  end
+
+  @doc ~S"""
+  Creates a string output from a map.
+
+  Should look like:
+  Team                           | MP |  W |  D |  L |  P
+  Allegoric Alaskans             |  3 |  2 |  0 |  1 |  6
+
+  ## Examples
+
+    iex> Tournament.create_team_output(%Tournament.Summary{draws: 0, losses: 1, matches_played: 3, name: "Allegoric Alaskans", points: 6, wins: 2})
+    "Allegoric Alaskans             |  3 |  2 |  0 |  1 |  6"
+  """
+  def create_team_output(summary = %Summary{}) do
+    pad_amount = 3
+    []
+    |> List.insert_at(-1, "#{String.pad_trailing(summary.name, 30)}")
+    |> List.insert_at(-1, String.pad_leading("#{summary.matches_played}", pad_amount))
+    |> List.insert_at(-1, String.pad_leading("#{summary.wins}", pad_amount))
+    |> List.insert_at(-1, String.pad_leading("#{summary.draws}", pad_amount))
+    |> List.insert_at(-1, String.pad_leading("#{summary.losses}", pad_amount))
+    |> List.insert_at(-1, String.pad_leading("#{summary.points}", pad_amount))
+    |> Enum.join(" |")
   end
 end
