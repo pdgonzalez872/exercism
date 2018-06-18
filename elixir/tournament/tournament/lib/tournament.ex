@@ -35,15 +35,12 @@ defmodule Tournament do
   """
   @spec tally(input :: list(String.t())) :: String.t()
   def tally(input) do
-    result =
-      input
-      |> create_matches()
-      |> Enum.map(fn match -> create_team_results(match) end)
-      |> List.flatten()
-      |> calculate_results()
-      # |> display_results()
-
-    # require IEx; IEx.pry()
+    input
+    |> create_matches()
+    |> Enum.map(fn match -> create_team_results(match) end)
+    |> List.flatten()
+    |> calculate_results()
+    |> create_output()
   end
 
   @doc ~S"""
@@ -139,8 +136,16 @@ defmodule Tournament do
   """
   def create_team_results(match = %Match{}) do
     [
-      %{team_name: match.home_team, result: match.home_team_result, points: match.home_team_points},
-      %{team_name: match.away_team, result: match.away_team_result, points: match.away_team_points},
+      %{
+        team_name: match.home_team,
+        result: match.home_team_result,
+        points: match.home_team_points
+      },
+      %{
+        team_name: match.away_team,
+        result: match.away_team_result,
+        points: match.away_team_points
+      }
     ]
   end
 
@@ -150,19 +155,11 @@ defmodule Tournament do
       |> Enum.group_by(fn tr -> tr.team_name end)
       |> Enum.map(fn group ->
         {team_name, results} = group
+
         Enum.reduce(results, %Summary{name: team_name}, fn r, acc ->
           update_result(acc, r)
         end)
       end)
-      |> Enum.sort_by(fn el ->
-        -el.points
-      end)
-      |> Enum.reduce("", fn summary, group_acc ->
-        group_acc <> create_team_output(summary) <> "\n"
-      end)
-      |> String.trim("\n")
-
-    "Team                           | MP |  W |  D |  L |  P\n" <> result
   end
 
   def update_result(result = %Summary{}, %{result: :win}) do
@@ -200,6 +197,7 @@ defmodule Tournament do
   """
   def create_team_output(summary = %Summary{}) do
     pad_amount = 3
+
     []
     |> List.insert_at(-1, "#{String.pad_trailing(summary.name, 30)}")
     |> List.insert_at(-1, String.pad_leading("#{summary.matches_played}", pad_amount))
@@ -208,5 +206,17 @@ defmodule Tournament do
     |> List.insert_at(-1, String.pad_leading("#{summary.losses}", pad_amount))
     |> List.insert_at(-1, String.pad_leading("#{summary.points}", pad_amount))
     |> Enum.join(" |")
+  end
+
+  def create_output(summaries) do
+    result =
+      summaries
+      |> Enum.sort_by(fn el -> -el.points end)
+      |> Enum.reduce("", fn summary, group_acc ->
+        group_acc <> create_team_output(summary) <> "\n"
+      end)
+      |> String.trim("\n")
+
+    "Team                           | MP |  W |  D |  L |  P\n" <> result
   end
 end

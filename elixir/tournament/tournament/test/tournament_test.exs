@@ -25,7 +25,6 @@ defmodule TournamentTest do
     assert Tournament.tally(input) == expected
   end
 
-  @tag :pending
   test "incomplete competition (not all pairs have played)" do
     input = [
       "Allegoric Alaskans;Blithering Badgers;loss",
