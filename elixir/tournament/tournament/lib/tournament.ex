@@ -154,10 +154,10 @@ defmodule Tournament do
           update_result(acc, r)
         end)
 
-        group_acc <> create_team_output(summary)
+        group_acc <> create_team_output(summary) <> "\n"
       end)
 
-    require IEx; IEx.pry
+    "Team                           | MP |  W |  D |  L |  P\n" <> result
   end
 
   def update_result(result = %Summary{}, %{result: :win}) do
