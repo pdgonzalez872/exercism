@@ -2,23 +2,6 @@ defmodule TournamentTest do
   use ExUnit.Case
   doctest Tournament
 
-  @tag :pending
-  test "can process 1 result" do
-    input = "Allegoric Alaskans;Blithering Badgers;win"
-
-    expected = %Tournament.Team{
-      name: "Allegoric Alaskans",
-      matches_played: 1,
-      wins: 1,
-      draws: 0,
-      losses: 0,
-      points: 3
-    }
-
-    assert Tournament.process_match(input) == expected
-  end
-
-  @tag :pending
   test "typical input" do
     input = [
       "Allegoric Alaskans;Blithering Badgers;win",

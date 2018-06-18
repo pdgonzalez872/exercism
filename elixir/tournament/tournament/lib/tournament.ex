@@ -2,11 +2,11 @@ defmodule Tournament do
   defmodule Team do
     defstruct(
       name: nil,
-      matches_played: nil,
-      wins: nil,
-      draws: nil,
-      losses: nil,
-      points: nil
+      matches_played: 0,
+      wins: 0,
+      draws: 0,
+      losses: 0,
+      points: 0
     )
   end
 
@@ -35,15 +35,15 @@ defmodule Tournament do
   """
   @spec tally(input :: list(String.t())) :: String.t()
   def tally(input) do
-    # result =
-    #   input
-    #   |> create_matches()
-    #   |> create_team_results()
-    #   |> calculate_results()
-    #   |> display_results()
+    result =
+      input
+      |> create_matches()
+      |> Enum.map(fn match -> create_team_results(match) end)
+      |> List.flatten()
+      |> calculate_results()
+      # |> display_results()
 
-    # require IEx
-    # IEx.pry()
+    # require IEx; IEx.pry()
   end
 
   @doc ~S"""
@@ -142,5 +142,23 @@ defmodule Tournament do
       %{team_name: match.home_team, result: match.home_team_result, points: match.home_team_points},
       %{team_name: match.away_team, result: match.away_team_result, points: match.away_team_points},
     ]
+  end
+
+  def calculate_results(team_results) do
+    unique_teams =
+      team_results
+      |> Enum.map(fn tr -> tr.team_name end)
+      |> MapSet.new()
+
+    team_structs =
+      unique_teams
+      |> Enum.map(fn team ->
+        %Team{name: team, wins: 0, losses: 0, draws: 0, points: 0}
+      end)
+
+    Enum.reduce(team_results, team_structs, fn tr, acc ->
+      # require IEx; IEx.pry
+      raise "continue here. Need to aggregate the results here."
+    end)
   end
 end
