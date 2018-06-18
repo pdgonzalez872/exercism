@@ -77,6 +77,7 @@ defmodule Tournament do
       |> create_match()
       |> score_match()
     end)
+    |> Enum.filter(fn el -> !is_nil(el) end)
   end
 
   @doc ~S"""
@@ -91,12 +92,19 @@ defmodule Tournament do
 
     iex> Tournament.create_match(["Allegoric Alaskans", "Blithering Badgers", "draw"])
     %Tournament.Match{home_team: "Allegoric Alaskans", away_team: "Blithering Badgers", home_team_result: :draw, away_team_result: :draw, raw_match_result: "draw", home_team_points: 1, away_team_points: 1}
+
+    iex> Tournament.create_match(["Allegoric Alaskans", "Blithering Badgers"])
+    nil
   """
-  def create_match(input) do
+  def create_match(input) when length(input) == 3 do
     [home_team, away_team, raw_match_result] = input
 
     %Match{home_team: home_team, away_team: away_team, raw_match_result: raw_match_result}
     |> score_match()
+  end
+
+  def create_match(_) do
+    nil
   end
 
   @doc ~S"""
@@ -124,6 +132,10 @@ defmodule Tournament do
     |> Map.put(:away_team_result, :draw)
     |> Map.put(:home_team_points, 1)
     |> Map.put(:away_team_points, 1)
+  end
+
+  def score_match(_) do
+    nil
   end
 
   @doc ~S"""
