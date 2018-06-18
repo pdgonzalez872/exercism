@@ -148,14 +148,19 @@ defmodule Tournament do
     result =
       team_results
       |> Enum.group_by(fn tr -> tr.team_name end)
-      |> Enum.reduce("", fn group, group_acc ->
+      |> Enum.map(fn group ->
         {team_name, results} = group
-        summary = Enum.reduce(results, %Summary{name: team_name}, fn r, acc ->
+        Enum.reduce(results, %Summary{name: team_name}, fn r, acc ->
           update_result(acc, r)
         end)
-
+      end)
+      |> Enum.sort_by(fn el ->
+        -el.points
+      end)
+      |> Enum.reduce("", fn summary, group_acc ->
         group_acc <> create_team_output(summary) <> "\n"
       end)
+      |> String.trim("\n")
 
     "Team                           | MP |  W |  D |  L |  P\n" <> result
   end
