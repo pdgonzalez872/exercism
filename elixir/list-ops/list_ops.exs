@@ -1,37 +1,57 @@
 defmodule ListOps do
-  # Please don't use any external modules (especially List) in your
-  # implementation. The point of this exercise is to create these basic functions
-  # yourself.
-  #
-  # Note that `++` is a function from an external module (Kernel, which is
-  # automatically imported) and so shouldn't be used either.
+  @moduledoc """
+  This makes me appreciate the existing implementations in Elixir.
 
-  @spec count(list) :: non_neg_integer
-  def count(l) do
+  All of my functions struggle with big inputs. I know they would eventually finish,
+  but that's not optimal.
+  """
+
+  def count([]), do: 0
+
+  def count([head|tail] = input) when is_list(input) do
+    1 + count(tail)
   end
 
-  @spec reverse(list) :: list
-  def reverse(l) do
+  def reverse([]), do: []
+
+  # This works, but takes forever for huge lists
+  # curious to see a good implementation of this.
+  def reverse([head|tail] = input) when is_list(input) do
+    reverse(tail) ++ [head]
   end
 
-  @spec map(list, (any -> any)) :: list
-  def map(l, f) do
+  def map([], _fun), do: []
+
+  def map([head|tail], fun) do
+    [fun.(head)] ++ map(tail, fun)
   end
 
-  @spec filter(list, (any -> as_boolean(term))) :: list
-  def filter(l, f) do
+  def filter([], _fun), do: []
+
+  def filter([head|tail], fun) do
+    if fun.(head) do
+      [head] ++ filter(tail, fun)
+    else
+      filter(tail, fun)
+    end
   end
 
-  @type acc :: any
-  @spec reduce(list, acc, (any, acc -> acc)) :: acc
-  def reduce(l, acc, f) do
+  def reduce([], 0, _fun), do: 0
+  def reduce([], acc, _fun), do: acc
+
+  # Nice! Saw how to take 2 params here:
+  # http://exercism.io/submissions/d7a9be6bc75845faba42fccd6269fea7
+  def reduce([head|tail], acc, fun) do
+    reduce(tail, fun.(head, acc), fun)
   end
 
-  @spec append(list, list) :: list
-  def append(a, b) do
-  end
+  def append([], input), do: input
+  def append(a, b), do: a ++ b
 
-  @spec concat([[any]]) :: [any]
-  def concat(ll) do
+  # Not performant either...
+  def concat([]), do: []
+  def concat(input) do
+    input
+    |> reduce([], (fn e, acc -> acc ++ e end))
   end
 end
