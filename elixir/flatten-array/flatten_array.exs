@@ -22,4 +22,6 @@ defmodule FlattenArray do
   def flatten(int) when is_integer(int) do
     [int]
   end
+
+  def flatten(nil_input) when is_nil(nil_input), do: []
 end
