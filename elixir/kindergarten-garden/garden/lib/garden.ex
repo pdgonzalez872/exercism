@@ -1,8 +1,4 @@
 defmodule Garden do
-  @moduledoc ~S"""
-  :)
-  """
-
   @default_students [
     :alice,
     :bob,
@@ -20,6 +16,15 @@ defmodule Garden do
 
   @plant_translations %{"C" => :clover, "G" => :grass, "R" => :radishes, "V" => :violets}
 
+  @doc ~S"""
+    Accepts a string representing the arrangement of cups on a windowsill and a
+    list with names of students in the class. The student names list does not
+    have to be in alphabetical order.
+
+    It decodes that string into the various gardens for each student and returns
+    that information in a map.
+  """
+  @spec info(String.t(), list) :: map
   def info(input) do
     people = create_people(@default_students)
     mapping = create_mappings(@default_students)
@@ -31,19 +36,15 @@ defmodule Garden do
     |> prepare_output()
   end
 
-  @doc ~S"""
-  Custom names, nice
-  """
   def info(input, names) do
     people = create_people(names)
     mappings = create_mappings(names)
 
-    result =
-      input
-      |> create_plantings()
-      |> translate_plantings()
-      |> allocate_to_people(people, mappings)
-      |> prepare_output()
+    input
+    |> create_plantings()
+    |> translate_plantings()
+    |> allocate_to_people(people, mappings)
+    |> prepare_output()
   end
 
   @doc ~S"""
@@ -103,23 +104,22 @@ defmodule Garden do
     %{alice: [:violets, :clover], bob: []}
   """
   def allocate_to_person(students, plant_list, mapping) do
-    result =
-      plant_list
-      |> Enum.with_index()
-      |> Enum.reduce(students, fn {el, i}, acc ->
-        person = mapping[i]
+    plant_list
+    |> Enum.with_index()
+    |> Enum.reduce(students, fn {el, i}, acc ->
+      person = mapping[i]
 
-        old =
-          case Map.fetch(acc, person) do
-            {:ok, old} ->
-              old
+      old =
+        case Map.fetch(acc, person) do
+          {:ok, old} ->
+            old
 
-            {:error} ->
-              []
-          end
+          {:error} ->
+            []
+        end
 
-        Map.put(acc, person, old ++ [el])
-      end)
+      Map.put(acc, person, old ++ [el])
+    end)
   end
 
   def translate_planting(planting) do
