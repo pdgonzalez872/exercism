@@ -5,48 +5,6 @@ defmodule Garden do
 
   @default_students [:alice, :bob, :charlie, :david, :eve, :fred, :ginny, :harriet, :ileana, :joseph, :kincaid, :larry]
 
-  @students %{
-    alice: [],
-    bob: [],
-    charlie: [],
-    david: [],
-    eve: [],
-    fred: [],
-    ginny: [],
-    harriet: [],
-    ileana: [],
-    joseph: [],
-    kincaid: [],
-    larry: []
-  }
-
-  @mapping %{
-    0 => :alice,
-    1 => :alice,
-    2 => :bob,
-    3 => :bob,
-    4 => :charlie,
-    5 => :charlie,
-    6 => :david,
-    7 => :david,
-    8 => :eve,
-    9 => :eve,
-    10 => :fred,
-    11 => :fred,
-    12 => :ginny,
-    13 => :ginny,
-    14 => :harriet,
-    15 => :harriet,
-    16 => :ileana,
-    17 => :ileana,
-    18 => :joseph,
-    19 => :joseph,
-    20 => :kincaid,
-    21 => :kincaid,
-    22 => :larry,
-    23 => :larry
-  }
-
   @plant_translations %{"C" => :clover, "G" => :grass, "R" => :radishes, "V" => :violets}
 
   def info(input) do
@@ -83,6 +41,9 @@ defmodule Garden do
   ## Examples:
     iex> Garden.create_people([:nate, :maggie])
     %{nate: [], maggie: []}
+
+    iex> Garden.create_people([:ophelia, :abby])
+    %{ophelia: [], abby: []}
   """
   def create_people(names) do
     Enum.reduce(names, %{}, fn el, acc -> Map.put(acc, el, []) end)
@@ -92,6 +53,9 @@ defmodule Garden do
   ## Examples:
     iex> Garden.create_mappings([:nate, :maggie])
     %{0 => :nate, 1 => :nate, 2 => :maggie, 3 => :maggie}
+
+    iex> Garden.create_mappings([:ophelia, :abby])
+    %{0 => :ophelia, 1 => :ophelia, 2 => :abby, 3 => :abby}
   """
   def create_mappings(names) do
     names
@@ -124,6 +88,10 @@ defmodule Garden do
     end)
   end
 
+  @doc ~S"""
+    iex> Garden.allocate_to_person(%{alice: [], bob: []}, [:violets, :clover], %{0 => :alice, 1 => :alice, 2 => :bob, 3 => :bob})
+    %{alice: [:violets, :clover], bob: []}
+  """
   def allocate_to_person(students, plant_list, mapping) do
     result =
       plant_list

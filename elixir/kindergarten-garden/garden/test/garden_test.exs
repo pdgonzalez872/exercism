@@ -65,8 +65,10 @@ defmodule GardenTest do
       :ynold
     ]
 
+    #                    xx                        xx
     garden_string = "VRCGVVRVCGGCCGVRGCVCGCGV\nVRCCCGCRRGVCGCRVVCVGCGCV"
     garden_info = Garden.info(garden_string, names)
+
     assert garden_info.maggie == {:violets, :radishes, :violets, :radishes}
     assert garden_info.nate == {:clover, :grass, :clover, :clover}
     assert garden_info.ophelia == {:violets, :violets, :clover, :grass}
