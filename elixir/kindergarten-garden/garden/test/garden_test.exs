@@ -7,25 +7,21 @@ defmodule GardenTest do
     assert garden_info.alice == {:radishes, :clover, :grass, :grass}
   end
 
-  @tag :pending
   test "gets another garden for Alice with just her plants" do
     garden_info = Garden.info("VC\nRC")
     assert garden_info.alice == {:violets, :clover, :radishes, :clover}
   end
 
-  @tag :pending
   test "returns an empty tuple if the child has no plants" do
     garden_info = Garden.info("VC\nRC")
     assert garden_info.bob == {}
   end
 
-  @tag :pending
   test "gets the garden for Bob" do
     garden_info = Garden.info("VVCG\nVVRC")
     assert garden_info.bob == {:clover, :grass, :radishes, :clover}
   end
 
-  @tag :pending
   test "gets the garden for all students" do
     garden_info = Garden.info("VRCGVVRVCGGCCGVRGCVCGCGV\nVRCCCGCRRGVCGCRVVCVGCGCV")
     assert garden_info.alice == {:violets, :radishes, :violets, :radishes}

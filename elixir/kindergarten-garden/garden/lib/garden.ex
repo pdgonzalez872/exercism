@@ -51,6 +51,14 @@ defmodule Garden do
     |> create_data_structure()
   end
 
+  @doc ~S"""
+  Custom names, nice
+  """
+  def info(input, _) do
+    input
+    |> create_data_structure()
+  end
+
   def create_data_structure(input) do
     [row_1, row_2] = String.split(input, "\n", trim: true)
 
