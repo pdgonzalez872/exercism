@@ -3,7 +3,9 @@ defmodule Garden do
   I don't like how the return type is a dynamic tuple.
   """
 
-  @students(%{
+  @default_students [:alice, :bob, :charlie, :david, :eve, :fred, :ginny, :harriet, :ileana, :joseph, :kincaid, :larry]
+
+  @students %{
     alice: [],
     bob: [],
     charlie: [],
@@ -16,35 +18,36 @@ defmodule Garden do
     joseph: [],
     kincaid: [],
     larry: []
-  })
+  }
 
-  @mapping(%{
-      0 => :alice,
-      1 => :alice,
-      2 => :bob,
-      3 => :bob,
-      4 => :charlie,
-      5 => :charlie,
-      6 => :david,
-      7 => :david,
-      8 => :eve,
-      9 => :eve,
-      10 => :fred,
-      11 => :fred,
-      12 => :ginny,
-      13 => :ginny,
-      14 => :harriet,
-      15 => :harriet,
-      16 => :ileana,
-      17 => :ileana,
-      18 => :joseph,
-      19 => :joseph,
-      20 => :kincaid,
-      21 => :kincaid,
-      22 => :larry,
-      23 => :larry,
-    }
-  )
+  @mapping %{
+    0 => :alice,
+    1 => :alice,
+    2 => :bob,
+    3 => :bob,
+    4 => :charlie,
+    5 => :charlie,
+    6 => :david,
+    7 => :david,
+    8 => :eve,
+    9 => :eve,
+    10 => :fred,
+    11 => :fred,
+    12 => :ginny,
+    13 => :ginny,
+    14 => :harriet,
+    15 => :harriet,
+    16 => :ileana,
+    17 => :ileana,
+    18 => :joseph,
+    19 => :joseph,
+    20 => :kincaid,
+    21 => :kincaid,
+    22 => :larry,
+    23 => :larry
+  }
+
+  @plant_translations %{"C" => :clover, "G" => :grass, "R" => :radishes, "V" => :violets}
 
   def info(input) do
     input
@@ -58,7 +61,42 @@ defmodule Garden do
   Custom names, nice
   """
   def info(input, names) do
-    input
+
+    people = create_people(names)
+    mappings = create_mappings(names)
+
+    result = input
+    |> create_plantings()
+    |> translate_plantings()
+    |> allocate_to_people(people, mappings)
+    |> prepare_output()
+  end
+
+  def debug(input) do
+    require IEx; IEx.pry
+  end
+
+  @doc ~S"""
+  ## Examples:
+    iex> Garden.create_people([:nate, :maggie])
+    %{nate: [], maggie: []}
+  """
+  def create_people(names) do
+    Enum.reduce(names, %{}, fn el, acc -> Map.put(acc, el, []) end)
+  end
+
+  @doc ~S"""
+  ## Examples:
+    iex> Garden.create_mappings([:nate, :maggie])
+    %{0 => :nate, 1 => :nate, 2 => :maggie, 3 => :maggie}
+  """
+  def create_mappings(names) do
+    names
+    |> Enum.reduce([], fn el, acc -> acc ++ [el]  ++ [el] end)
+    |> Enum.with_index()
+    |> Enum.reduce(%{}, fn {el, i}, acc ->
+      Map.put(acc, i, el)
+    end)
   end
 
   def create_plantings(input) when is_binary(input) do
@@ -84,18 +122,23 @@ defmodule Garden do
   end
 
   def allocate_to_person(students, plant_list, mapping) do
-    result = plant_list
-    |> Enum.with_index()
-    |> Enum.reduce(students, fn {el, i}, acc ->
-      person = mapping[i]
-      old = case Map.fetch(acc, person) do
-        {:ok, old} ->
-          old
-        {:error} ->
-          []
-      end
-      Map.put(acc, person, old ++ [el])
-    end)
+    result =
+      plant_list
+      |> Enum.with_index()
+      |> Enum.reduce(students, fn {el, i}, acc ->
+        person = mapping[i]
+
+        old =
+          case Map.fetch(acc, person) do
+            {:ok, old} ->
+              old
+
+            {:error} ->
+              []
+          end
+
+        Map.put(acc, person, old ++ [el])
+      end)
   end
 
   def translate_planting(planting) do
@@ -103,7 +146,6 @@ defmodule Garden do
   end
 
   def translate_plant_type(plant) do
-    plantings = %{"C" => :clover, "G" => :grass, "R" => :radishes, "V" => :violets}
-    plantings[plant]
+    @plant_translations[plant]
   end
 end
