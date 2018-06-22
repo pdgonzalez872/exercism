@@ -50,10 +50,13 @@ defmodule Garden do
   @plant_translations %{"C" => :clover, "G" => :grass, "R" => :radishes, "V" => :violets}
 
   def info(input) do
+    people = create_people(@default_students)
+    mapping = create_mappings(@default_students)
+
     input
     |> create_plantings()
     |> translate_plantings()
-    |> allocate_to_people(@students, @mapping)
+    |> allocate_to_people(people, mapping)
     |> prepare_output()
   end
 

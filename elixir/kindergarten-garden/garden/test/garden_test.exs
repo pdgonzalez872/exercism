@@ -39,6 +39,7 @@ defmodule GardenTest do
   end
 
 
+  # I think this test is incorrect
   @tag :pending
   test "accepts custom child names" do
     garden_info = Garden.info("VC\nRC", [:nate, :maggie])
