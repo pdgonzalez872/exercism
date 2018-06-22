@@ -48,33 +48,36 @@ defmodule Garden do
 
   def info(input) do
     input
-    |> create_data_structure()
+    |> create_plantings()
+    |> translate_plantings()
+    |> allocate_to_people(@students, @mapping)
+    |> prepare_output()
   end
 
   @doc ~S"""
   Custom names, nice
   """
-  def info(input, _) do
+  def info(input, names) do
     input
-    |> create_data_structure()
   end
 
-  def create_data_structure(input) do
+  def create_plantings(input) when is_binary(input) do
     [row_1, row_2] = String.split(input, "\n", trim: true)
+    {String.split(row_1, "", trim: true), String.split(row_2, "", trim: true)}
+  end
 
-    plantings_1 = String.split(row_1, "", trim: true)
-    plantings_2 = String.split(row_2, "", trim: true)
+  def translate_plantings({p1, p2}) do
+    {translate_planting(p1), translate_planting(p2)}
+  end
 
-    # shameless green
-    plantings = %{"C" => :clover, "G" => :grass, "R" => :radishes, "V" => :violets}
+  def allocate_to_people({p1, p2}, people, mapping) do
+    result1 = allocate_to_person(people, p1, mapping)
+    result2 = allocate_to_person(people, p2, mapping)
+    {result1, result2}
+  end
 
-    translated_1 = plantings_1 |> translate_planting()
-    translated_2 = plantings_2 |> translate_planting()
-
-    result_1 = allocate_to_person(@students, translated_1, @mapping)
-    result_2 = allocate_to_person(@students, translated_2, @mapping)
-
-    Map.merge(result_1, result_2, fn _k, v1, v2 -> v1 ++ v2 end)
+  def prepare_output({p1, p2}) do
+    Map.merge(p1, p2, fn _k, v1, v2 -> v1 ++ v2 end)
     |> Enum.reduce(%{}, fn {k, v}, acc ->
       Map.put(acc, k, List.to_tuple(v))
     end)
