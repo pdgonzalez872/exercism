@@ -61,13 +61,14 @@ defmodule Garden do
   @doc ~S"""
   ## Examples:
     iex> Garden.create_mappings([:nate, :maggie])
-    %{0 => :nate, 1 => :nate, 2 => :maggie, 3 => :maggie}
+    %{0 => :maggie, 1 => :maggie, 2 => :nate, 3 => :nate}
 
     iex> Garden.create_mappings([:ophelia, :abby])
-    %{0 => :ophelia, 1 => :ophelia, 2 => :abby, 3 => :abby}
+    %{0 => :abby, 1 => :abby, 2 => :ophelia, 3 => :ophelia}
   """
   def create_mappings(names) do
     names
+    |> Enum.sort()
     |> Enum.reduce([], fn el, acc -> acc ++ [el] ++ [el] end)
     |> Enum.with_index()
     |> Enum.reduce(%{}, fn {el, i}, acc ->

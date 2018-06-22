@@ -42,8 +42,6 @@ defmodule GardenTest do
   @tag :pending
   test "accepts custom child names" do
     garden_info = Garden.info("VC\nRC", [:nate, :maggie])
-    require IEx
-    IEx.pry()
     assert garden_info.maggie == {:violets, :clover, :radishes, :clover}
     assert garden_info.nate == {}
   end
