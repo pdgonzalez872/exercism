@@ -1,4 +1,8 @@
 defmodule Garden do
+  @moduledoc ~S"""
+  I don't like how the return type is a dynamic tuple.
+  """
+
   @students(%{
     alice: [],
     bob: [],
@@ -62,8 +66,10 @@ defmodule Garden do
     result_1 = allocate_to_person(@students, translated_1, @mapping)
     result_2 = allocate_to_person(@students, translated_2, @mapping)
 
-    final = Map.merge(result_1, result_2, fn _k, v1, v2 -> v1 ++ v2 end)
-    require IEx; IEx.pry()
+    Map.merge(result_1, result_2, fn _k, v1, v2 -> v1 ++ v2 end)
+    |> Enum.reduce(%{}, fn {k, v}, acc ->
+      Map.put(acc, k, List.to_tuple(v))
+    end)
   end
 
   def allocate_to_person(students, plant_list, mapping) do
