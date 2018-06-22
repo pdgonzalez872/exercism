@@ -38,16 +38,17 @@ defmodule GardenTest do
     assert garden_info.larry == {:grass, :violets, :clover, :violets}
   end
 
-
   # I think this test is incorrect
   @tag :pending
   test "accepts custom child names" do
     garden_info = Garden.info("VC\nRC", [:nate, :maggie])
-    require IEx; IEx.pry
+    require IEx
+    IEx.pry()
     assert garden_info.maggie == {:violets, :clover, :radishes, :clover}
     assert garden_info.nate == {}
   end
 
+  # I think this test is incorrect
   @tag :pending
   test "gets the garden for all students with custom child names" do
     names = [
@@ -65,7 +66,6 @@ defmodule GardenTest do
       :ynold
     ]
 
-    #                    xx                        xx
     garden_string = "VRCGVVRVCGGCCGVRGCVCGCGV\nVRCCCGCRRGVCGCRVVCVGCGCV"
     garden_info = Garden.info(garden_string, names)
 

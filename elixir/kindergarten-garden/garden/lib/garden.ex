@@ -1,9 +1,22 @@
 defmodule Garden do
   @moduledoc ~S"""
-  I don't like how the return type is a dynamic tuple.
+  :)
   """
 
-  @default_students [:alice, :bob, :charlie, :david, :eve, :fred, :ginny, :harriet, :ileana, :joseph, :kincaid, :larry]
+  @default_students [
+    :alice,
+    :bob,
+    :charlie,
+    :david,
+    :eve,
+    :fred,
+    :ginny,
+    :harriet,
+    :ileana,
+    :joseph,
+    :kincaid,
+    :larry
+  ]
 
   @plant_translations %{"C" => :clover, "G" => :grass, "R" => :radishes, "V" => :violets}
 
@@ -22,19 +35,15 @@ defmodule Garden do
   Custom names, nice
   """
   def info(input, names) do
-
     people = create_people(names)
     mappings = create_mappings(names)
 
-    result = input
-    |> create_plantings()
-    |> translate_plantings()
-    |> allocate_to_people(people, mappings)
-    |> prepare_output()
-  end
-
-  def debug(input) do
-    require IEx; IEx.pry
+    result =
+      input
+      |> create_plantings()
+      |> translate_plantings()
+      |> allocate_to_people(people, mappings)
+      |> prepare_output()
   end
 
   @doc ~S"""
@@ -59,7 +68,7 @@ defmodule Garden do
   """
   def create_mappings(names) do
     names
-    |> Enum.reduce([], fn el, acc -> acc ++ [el]  ++ [el] end)
+    |> Enum.reduce([], fn el, acc -> acc ++ [el] ++ [el] end)
     |> Enum.with_index()
     |> Enum.reduce(%{}, fn {el, i}, acc ->
       Map.put(acc, i, el)
