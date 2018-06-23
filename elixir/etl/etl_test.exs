@@ -3,7 +3,6 @@ if !System.get_env("EXERCISM_TEST_EXAMPLES") do
 end
 
 ExUnit.start()
-ExUnit.configure(exclude: :pending, trace: true)
 
 defmodule TransformTest do
   use ExUnit.Case
