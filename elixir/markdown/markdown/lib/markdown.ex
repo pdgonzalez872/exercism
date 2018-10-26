@@ -14,7 +14,7 @@ defmodule Markdown do
     |> String.split("\n")
     |> Enum.map(fn line -> process(line) end)
     |> Enum.join()
-    |> patch()
+    |> handle_list()
   end
 
   defp process(line) do
@@ -27,11 +27,15 @@ defmodule Markdown do
         parse_list_md_level(line)
       end
     else
-      line
-      |> String.split()
-      |> join_words_with_tags()
-      |> enclose_text_with_tags("<p>", "</p>")
+      handle_line(line)
     end
+  end
+
+  def handle_line(line) do
+    line
+    |> String.split()
+    |> join_words_with_tags()
+    |> enclose_text_with_tags("<p>", "</p>")
   end
 
   defp parse_header_md_level(hwt) do
@@ -73,11 +77,11 @@ defmodule Markdown do
     |> String.replace_suffix(tag_mapping, "</#{tag_name}>")
   end
 
-  defp patch(l) do
-    String.replace_suffix(
-      String.replace(l, "<li>", "<ul>" <> "<li>", global: false),
-      "</li>",
-      "</li>" <> "</ul>"
-    )
+  defp handle_list(list_text) do
+    list_text
+    # This only gets the first instance. Nice.
+    |> String.replace("<li>", "<ul><li>", global: false)
+    # This only gets the last instance. Nice x2
+    |> String.replace_suffix("</li>", "</li></ul>")
   end
 end

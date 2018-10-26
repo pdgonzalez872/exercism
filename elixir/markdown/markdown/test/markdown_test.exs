@@ -58,6 +58,7 @@ defmodule MarkdownTest do
     assert Markdown.parse(input) == expected
   end
 
+  @tag :paulo
   test "with a little bit of everything" do
     input = "# Header!\n* __Bold Item__\n* _Italic Item_"
 
