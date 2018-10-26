@@ -7,8 +7,6 @@ defmodule Markdown do
     iex> Markdown.parse("This is a paragraph")
     "<p>This is a paragraph</p>"
 
-    iex> Markdown.parse("#Header!\n* __Bold Item__\n* _Italic Item_")
-    "<h1>Header!</h1><ul><li><em>Bold Item</em></li><li><i>Italic Item</i></li></ul>"
   """
   @spec parse(String.t()) :: String.t()
   def parse(document) do
@@ -22,6 +20,7 @@ defmodule Markdown do
   defp process(line) do
     if String.starts_with?(line, "#") || String.starts_with?(line, "*") do
       if String.starts_with?(line, "#") do
+        #require IEx; IEx.pry
         line
         |> parse_header_md_level()
         |> enclose_with_header_tag()
@@ -29,7 +28,9 @@ defmodule Markdown do
         parse_list_md_level(line)
       end
     else
-      enclose_with_paragraph_tag(String.split(line))
+      line
+      |> String.split()
+      |> enclose_with_paragraph_tag()
     end
   end
 
@@ -51,28 +52,20 @@ defmodule Markdown do
     "<p>#{join_words_with_tags(t)}</p>"
   end
 
-  defp join_words_with_tags(t) do
-    Enum.join(Enum.map(t, fn w -> replace_md_with_tag(w) end), " ")
+  defp join_words_with_tags(split_sentence) do
+    split_sentence
+    |> Enum.map(fn word ->
+      word
+      |> translate_to_tag("__", "strong")
+      |> translate_to_tag("_", "em")
+    end)
+    |> Enum.join(" ")
   end
 
-  defp replace_md_with_tag(w) do
-    replace_suffix_md(replace_prefix_md(w))
-  end
-
-  defp replace_prefix_md(w) do
-    cond do
-      w =~ ~r/^#{"__"}{1}/ -> String.replace(w, ~r/^#{"__"}{1}/, "<strong>", global: false)
-      w =~ ~r/^[#{"_"}{1}][^#{"_"}+]/ -> String.replace(w, ~r/_/, "<em>", global: false)
-      true -> w
-    end
-  end
-
-  defp replace_suffix_md(w) do
-    cond do
-      w =~ ~r/#{"__"}{1}$/ -> String.replace(w, ~r/#{"__"}{1}$/, "</strong>")
-      w =~ ~r/[^#{"_"}{1}]/ -> String.replace(w, ~r/_/, "</em>")
-      true -> w
-    end
+  def translate_to_tag(word, tag_mapping, tag_name) do
+    word
+    |> String.replace_prefix(tag_mapping, "<#{tag_name}>")
+    |> String.replace_suffix(tag_mapping, "</#{tag_name}>")
   end
 
   defp patch(l) do

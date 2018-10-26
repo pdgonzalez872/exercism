@@ -44,6 +44,14 @@ defmodule MarkdownTest do
     assert Markdown.parse(input) == expected
   end
 
+  @tag :skip
+  test "this" do
+    result = Markdown.parse("#Header!\n* __Bold Item__\n* _Italic Item_")
+    expected = "<h1>Header!</h1><ul><li><em>Bold Item</em></li><li><i>Italic Item</i></li></ul>"
+
+    assert result == expected
+  end
+
   test "unordered lists" do
     input = "* Item 1\n* Item 2"
     expected = "<ul><li>Item 1</li><li>Item 2</li></ul>"
