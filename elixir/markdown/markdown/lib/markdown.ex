@@ -20,7 +20,6 @@ defmodule Markdown do
   defp process(line) do
     if String.starts_with?(line, "#") || String.starts_with?(line, "*") do
       if String.starts_with?(line, "#") do
-        #require IEx; IEx.pry
         line
         |> parse_header_md_level()
         |> enclose_with_header_tag()
@@ -30,7 +29,8 @@ defmodule Markdown do
     else
       line
       |> String.split()
-      |> enclose_with_paragraph_tag()
+      |> join_words_with_tags()
+      |> enclose_sentence_with_tags("<p>", "</p>")
     end
   end
 
@@ -40,8 +40,15 @@ defmodule Markdown do
   end
 
   defp parse_list_md_level(l) do
-    t = String.split(String.trim_leading(l, "* "))
-    "<li>" <> join_words_with_tags(t) <> "</li>"
+    l
+    |> String.trim_leading("* ")
+    |> String.split()
+    |> join_words_with_tags()
+    |> enclose_sentence_with_tags("<li>", "</li>")
+  end
+
+  def enclose_sentence_with_tags(input, open_tag, close_tag) do
+    open_tag <> input <> close_tag
   end
 
   defp enclose_with_header_tag({hl, htl}) do
