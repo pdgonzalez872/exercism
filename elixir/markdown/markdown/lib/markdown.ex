@@ -18,16 +18,22 @@ defmodule Markdown do
   end
 
   defp process(line) do
-    if String.starts_with?(line, "#") || String.starts_with?(line, "*") do
-      if String.starts_with?(line, "#") do
+    cond do
+      String.starts_with?(line, "*") && String.starts_with?(line, "#") ->
         line
         |> parse_header_md_level()
         |> enclose_with_header_tag()
-      else
+
+      String.starts_with?(line, "#") ->
+        line
+        |> parse_header_md_level()
+        |> enclose_with_header_tag()
+
+      String.starts_with?(line, "*") ->
         parse_list_md_level(line)
-      end
-    else
-      handle_line(line)
+
+      true ->
+        handle_line(line)
     end
   end
 
