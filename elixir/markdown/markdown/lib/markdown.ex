@@ -30,7 +30,7 @@ defmodule Markdown do
       line
       |> String.split()
       |> join_words_with_tags()
-      |> enclose_sentence_with_tags("<p>", "</p>")
+      |> enclose_text_with_tags("<p>", "</p>")
     end
   end
 
@@ -44,19 +44,17 @@ defmodule Markdown do
     |> String.trim_leading("* ")
     |> String.split()
     |> join_words_with_tags()
-    |> enclose_sentence_with_tags("<li>", "</li>")
+    |> enclose_text_with_tags("<li>", "</li>")
   end
 
-  def enclose_sentence_with_tags(input, open_tag, close_tag) do
+  def enclose_text_with_tags(input, open_tag, close_tag) do
     open_tag <> input <> close_tag
   end
 
-  defp enclose_with_header_tag({hl, htl}) do
-    "<h" <> hl <> ">" <> htl <> "</h" <> hl <> ">"
-  end
-
-  defp enclose_with_paragraph_tag(t) do
-    "<p>#{join_words_with_tags(t)}</p>"
+  defp enclose_with_header_tag({header_level, header_text}) do
+    open_tag = "<h#{header_level}>"
+    close_tag = "</h#{header_level}>"
+    enclose_text_with_tags(header_text, open_tag, close_tag)
   end
 
   defp join_words_with_tags(split_sentence) do
