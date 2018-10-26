@@ -1,13 +1,4 @@
 defmodule Markdown do
-  @doc """
-    Parses a given string with Markdown syntax and returns the associated HTML for that string.
-
-    ## Examples
-
-    iex> Markdown.parse("This is a paragraph")
-    "<p>This is a paragraph</p>"
-
-  """
   @spec parse(String.t()) :: String.t()
   def parse(document) do
     document
@@ -32,6 +23,7 @@ defmodule Markdown do
       String.starts_with?(line, "*") ->
         parse_list_md_level(line)
 
+      # This is a simple sentence
       true ->
         handle_line(line)
     end
